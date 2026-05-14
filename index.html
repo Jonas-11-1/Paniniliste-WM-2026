@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paniniliste WM 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C8102E;--red-dark:#9e0c24;--red-light:#f5c6ce;
+  --navy:#1a2744;--navy-mid:#243560;--navy-light:#2e437a;
+  --white:#ffffff;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-300:#cbd5e1;
+  --gray-400:#94a3b8;--gray-500:#64748b;--gray-700:#334155;--gray-900:#0f172a;
+  --green:#16a34a;--green-light:#dcfce7;
+  --orange:#ea580c;--orange-light:#ffedd5;
+  --gold:#f59e0b;--gold-light:#fef3c7;
+  --bg:var(--gray-50);--surface:var(--white);--surface-2:var(--gray-100);
+  --border:var(--gray-200);--text:var(--gray-900);--text-muted:var(--gray-500);
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+  --radius:10px;--radius-lg:16px;--radius-full:9999px;
+  --transition:.18s ease;--header-h:62px;
+}
+[data-theme="dark"]{
+  --bg:#0d1117;--surface:#161b22;--surface-2:#21262d;--border:#30363d;
+  --text:#e6edf3;--text-muted:#8b949e;
+  --shadow:0 1px 3px rgba(0,0,0,.4);
+  --shadow-md:0 4px 6px rgba(0,0,0,.3);
+  --shadow-lg:0 10px 15px rgba(0,0,0,.4);
+  --gray-100:#21262d;--gray-200:#30363d;--gray-300:#3d444d;
+  --green-light:#0d3321;--orange-light:#3d1a08;--gold-light:#3d2c00;--red-light:#3d0b14;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;transition:background var(--transition),color var(--transition)}
+/* HEADER */
+header{position:sticky;top:0;z-index:200;height:var(--header-h);background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 1rem;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.header-logo{display:flex;align-items:center;gap:.5rem;color:#fff;text-decoration:none;font-weight:700;font-size:1rem;letter-spacing:-.01em}
+.header-logo .logo-ball{color:var(--red)}
+.header-logo .sub{font-weight:400;opacity:.65;font-size:.8rem}
+.header-right{display:flex;align-items:center;gap:.3rem;flex-shrink:0}
+.h-btn{background:none;border:none;cursor:pointer;color:#fff;padding:.4rem;border-radius:var(--radius);transition:background var(--transition);display:flex;align-items:center;justify-content:center}
+.h-btn:hover{background:rgba(255,255,255,.12)}
+.save-btn{background:var(--red)!important;padding:.38rem .85rem!important;font-size:.82rem;font-weight:600;gap:.3rem;border-radius:var(--radius)!important;display:flex!important;align-items:center}
+.save-btn:hover{background:var(--red-dark)!important}
+.last-upd{font-size:.7rem;color:rgba(255,255,255,.5);padding:0 .3rem;white-space:nowrap;display:none}
+@media(min-width:480px){.last-upd{display:block}}
+/* LAYOUT */
+.app-layout{min-height:calc(100vh - var(--header-h))}
+@media(min-width:768px){.app-layout{display:flex}}
+main{flex:1;padding:1.25rem 1rem 5rem;max-width:960px;margin:0 auto}
+@media(min-width:768px){main{padding:1.5rem 2rem 2rem}}
+/* SIDE NAV */
+.side-nav{display:none}
+@media(min-width:768px){
+  nav.bottom-nav{display:none}
+  .side-nav{display:flex;flex-direction:column;position:sticky;top:var(--header-h);height:calc(100vh - var(--header-h));width:192px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:.75rem .5rem;gap:.15rem;overflow-y:auto}
+  .side-nav button{border:none;background:none;cursor:pointer;color:var(--text-muted);padding:.58rem .9rem;border-radius:var(--radius);display:flex;align-items:center;gap:.6rem;font-size:.875rem;font-weight:500;transition:all var(--transition);width:100%;text-align:left;white-space:nowrap}
+  .side-nav button:hover{background:var(--surface-2);color:var(--text)}
+  .side-nav button.active{background:var(--red-light);color:var(--red)}
+  [data-theme="dark"] .side-nav button.active{background:rgba(200,16,46,.18)}
+}
+/* BOTTOM NAV */
+nav.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--surface);border-top:1px solid var(--border);display:flex;box-shadow:0 -2px 8px rgba(0,0,0,.08)}
+nav.bottom-nav button{flex:1;border:none;background:none;cursor:pointer;color:var(--text-muted);padding:.52rem .25rem .42rem;display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.62rem;font-weight:500;transition:color var(--transition),background var(--transition)}
+nav.bottom-nav button.active{color:var(--red)}
+nav.bottom-nav button:hover{background:var(--surface-2)}
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+/* HERO PROGRESS */
+.hero-card{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 55%,var(--red-dark) 100%);border-radius:var(--radius-lg);padding:1.4rem 1.5rem 1.25rem;color:#fff;margin-bottom:1.25rem;box-shadow:var(--shadow-lg)}
+.hero-label{font-size:.88rem;opacity:.75;font-weight:500;margin-bottom:.3rem}
+.hero-count{font-size:2.1rem;font-weight:900;line-height:1;margin-bottom:.12rem;letter-spacing:-.02em}
+.hero-pct{font-size:.88rem;opacity:.7;margin-bottom:.9rem}
+.prog-track{background:rgba(255,255,255,.18);border-radius:var(--radius-full);height:9px;overflow:hidden}
+.prog-fill{background:linear-gradient(90deg,#e83050,#ff6b7a);height:100%;border-radius:var(--radius-full);transition:width .7s ease}
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin-bottom:1.25rem}
+@media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem .8rem;box-shadow:var(--shadow)}
+.stat-val{font-size:1.55rem;font-weight:800;line-height:1.1}
+.stat-lbl{font-size:.7rem;color:var(--text-muted);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-top:.1rem}
+.c-green .stat-val{color:var(--green)}
+.c-red .stat-val{color:var(--red)}
+.c-orange .stat-val{color:var(--orange)}
+.c-gold .stat-val{color:var(--gold)}
+/* SECTION TITLE */
+.sec-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.65rem;padding-bottom:.35rem;border-bottom:2px solid var(--border)}
+/* TEAM PROGRESS */
+.team-prog-list{display:flex;flex-direction:column;gap:.4rem}
+.tpl-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.6rem .85rem;display:flex;align-items:center;gap:.7rem;box-shadow:var(--shadow)}
+.tpl-name{font-size:.82rem;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tpl-bar{flex:2;background:var(--border);border-radius:var(--radius-full);height:5px;overflow:hidden}
+.tpl-fill{height:100%;border-radius:var(--radius-full);transition:width .5s ease}
+.tpl-fill.full{background:var(--green)}
+.tpl-fill.partial{background:var(--orange)}
+.tpl-fill.zero{background:var(--gray-300)}
+.tpl-pct{font-size:.72rem;color:var(--text-muted);width:32px;text-align:right;font-variant-numeric:tabular-nums}
+.tpl-cnt{font-size:.72rem;color:var(--text-muted);width:38px;text-align:right;font-variant-numeric:tabular-nums}
+/* FILTERS */
+.filter-bar{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.9rem;align-items:center}
+.filter-btn{border:1px solid var(--border);background:var(--surface);color:var(--text-muted);border-radius:var(--radius-full);padding:.28rem .7rem;font-size:.78rem;font-weight:500;cursor:pointer;transition:all var(--transition);white-space:nowrap}
+.filter-btn:hover{border-color:var(--red);color:var(--red)}
+.filter-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+.search-wrap{flex:1;min-width:150px;position:relative}
+.search-wrap input{width:100%;padding:.38rem .75rem .38rem 1.9rem;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:var(--radius-full);font-size:.82rem;outline:none;transition:border-color var(--transition)}
+.search-wrap input:focus{border-color:var(--red)}
+.search-icon{position:absolute;left:.58rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+/* TEAM ACCORDION */
+.team-sec{margin-bottom:.45rem;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.team-hdr{display:flex;align-items:center;justify-content:space-between;padding:.68rem .9rem;cursor:pointer;background:var(--surface);transition:background var(--transition);user-select:none}
+.team-hdr:hover{background:var(--surface-2)}
+.team-hdr-l{display:flex;align-items:center;gap:.5rem;flex:1;min-width:0}
+.team-hdr-name{font-weight:600;font-size:.875rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.team-badge{font-size:.68rem;font-weight:600;padding:.12rem .45rem;border-radius:var(--radius-full);background:var(--green-light);color:var(--green);flex-shrink:0}
+.team-badge.zero{background:var(--gray-200);color:var(--text-muted)}
+.team-badge.partial{background:var(--orange-light);color:var(--orange)}
+.team-chevron{transition:transform .2s;flex-shrink:0;color:var(--text-muted)}
+.team-sec.open .team-chevron{transform:rotate(180deg)}
+.team-stickers{display:none;padding:.65rem;border-top:1px solid var(--border);grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:.45rem}
+.team-sec.open .team-stickers{display:grid}
+/* STICKER CARD */
+.s-card{border:2px solid var(--border);border-radius:8px;padding:.45rem .4rem;cursor:pointer;text-align:center;transition:all var(--transition);background:var(--surface-2);position:relative;min-height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08rem}
+.s-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--gray-300)}
+.s-card.owned{border-color:var(--green);background:var(--green-light)}
+.s-card.double{border-color:var(--orange);background:var(--orange-light)}
+.s-code{font-size:.68rem;font-weight:700;color:var(--text-muted);letter-spacing:.02em}
+.s-card.owned .s-code{color:var(--green)}
+.s-card.double .s-code{color:var(--orange)}
+.s-name{font-size:.66rem;line-height:1.2;color:var(--text);word-break:break-word}
+.s-foil{font-size:.62rem;color:var(--gold)}
+.s-dbl-badge{position:absolute;top:3px;right:3px;font-size:.58rem;font-weight:700;background:var(--orange);color:#fff;border-radius:var(--radius-full);padding:0 4px;min-width:15px;height:15px;display:flex;align-items:center;justify-content:center}
+.cat-badge{font-size:.56rem;text-transform:uppercase;letter-spacing:.04em;padding:.06rem .28rem;border-radius:3px;margin-top:.06rem}
+.cat-badge.badge{background:#dbeafe;color:#1d4ed8}
+.cat-badge.team_photo{background:#f3e8ff;color:#7c3aed}
+.cat-badge.museum{background:var(--gold-light);color:#92400e}
+.cat-badge.intro{background:#e0f2fe;color:#0369a1}
+[data-theme="dark"] .cat-badge.badge{background:#1e3a5f;color:#60a5fa}
+[data-theme="dark"] .cat-badge.team_photo{background:#3b1d6b;color:#c4b5fd}
+[data-theme="dark"] .cat-badge.museum{background:#3d2c00;color:#fbbf24}
+[data-theme="dark"] .cat-badge.intro{background:#0c2d48;color:#38bdf8}
+/* ENTRY */
+.entry-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:1.1rem}
+.e-tab{border:none;background:none;cursor:pointer;padding:.6rem 1rem;font-size:.875rem;font-weight:600;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all var(--transition);display:flex;align-items:center;gap:.35rem}
+.e-tab.active{color:var(--red);border-bottom-color:var(--red)}
+.e-panel{display:none}
+.e-panel.active{display:block}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:2.2rem 1.5rem;text-align:center;cursor:pointer;transition:all var(--transition);position:relative;overflow:hidden;background:var(--surface)}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--red);background:rgba(200,16,46,.04)}
+.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-zone .uz-icon{color:var(--text-muted);margin-bottom:.65rem}
+.upload-zone h3{font-size:.95rem;margin-bottom:.3rem}
+.upload-zone p{font-size:.82rem;color:var(--text-muted)}
+.ocr-preview{margin-top:.9rem;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.ocr-preview img{width:100%;display:block;max-height:200px;object-fit:contain;background:var(--surface-2)}
+.ocr-status{padding:.65rem .9rem;font-size:.82rem;color:var(--text-muted)}
+.ocr-pbar{height:3px;background:var(--border)}
+.ocr-pbar-fill{height:100%;background:var(--red);transition:width .2s ease;width:0%}
+.manual-row{display:flex;gap:.45rem;margin-bottom:.9rem}
+.manual-row input{flex:1;padding:.55rem .8rem;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:var(--radius);font-size:.9rem;outline:none;transition:border-color var(--transition);font-family:monospace;text-transform:uppercase}
+.manual-row input:focus{border-color:var(--red)}
+.btn{padding:.5rem 1rem;border:none;border-radius:var(--radius);cursor:pointer;font-size:.85rem;font-weight:600;display:inline-flex;align-items:center;gap:.38rem;transition:all var(--transition);white-space:nowrap}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover{background:var(--red-dark)}
+.btn-secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--border)}
+.btn-ghost{background:none;color:var(--text-muted)}
+.btn-ghost:hover{background:var(--surface-2);color:var(--text)}
+.btn-sm{padding:.32rem .65rem;font-size:.76rem}
+.btn-dbl{border:1px solid var(--border);background:var(--surface);color:var(--text-muted);border-radius:var(--radius);padding:.5rem .8rem;cursor:pointer;font-size:.82rem;font-weight:500;transition:all var(--transition);display:flex;align-items:center;gap:.3rem}
+.btn-dbl.active{background:var(--orange-light);border-color:var(--orange);color:var(--orange)}
+.preview-card{padding:.7rem .9rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);margin-bottom:.9rem;min-height:58px}
+.preview-card.found{border-color:var(--green);background:var(--green-light)}
+.preview-card.not-found{border-color:var(--red);background:var(--red-light)}
+.pv-code{font-size:1.15rem;font-weight:800;font-family:monospace}
+.pv-name{font-size:.82rem;color:var(--text-muted)}
+.queue-sec{margin-top:.5rem}
+.queue-list{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.75rem}
+.q-item{display:flex;align-items:center;gap:.45rem;padding:.4rem .68rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);font-size:.82rem}
+.q-item.dbl{border-color:var(--orange)}
+.q-code{font-weight:700;font-family:monospace;width:56px;flex-shrink:0}
+.q-name{flex:1;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q-rm{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:.08rem;border-radius:4px}
+.q-rm:hover{color:var(--red)}
+/* LIST VIEWS */
+.lg{margin-bottom:.85rem}
+.lg-hdr{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:.35rem 0;border-bottom:1px solid var(--border);margin-bottom:.35rem;display:flex;justify-content:space-between}
+.lg-items{display:flex;flex-direction:column;gap:.22rem}
+.li{display:flex;align-items:center;gap:.55rem;padding:.42rem .65rem;border-radius:8px;background:var(--surface);border:1px solid var(--border);font-size:.82rem}
+.li-code{font-weight:700;font-family:monospace;color:var(--text-muted);min-width:48px}
+.li-name{flex:1}
+.li-cnt{background:var(--orange-light);color:var(--orange);border-radius:var(--radius-full);padding:.08rem .45rem;font-size:.72rem;font-weight:700;min-width:22px;text-align:center}
+.foil-star{color:var(--gold)}
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:1.4rem;max-width:430px;width:100%;box-shadow:var(--shadow-lg);max-height:88vh;overflow-y:auto;position:relative}
+.modal-title{font-size:1.1rem;font-weight:700;margin-bottom:.9rem;padding-bottom:.65rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:.22rem;border-radius:6px;transition:all var(--transition)}
+.modal-close:hover{background:var(--surface-2);color:var(--text)}
+.modal-actions{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.9rem}
+.d-code{font-size:1.9rem;font-weight:900;font-family:monospace;color:var(--navy);margin-bottom:.08rem}
+[data-theme="dark"] .d-code{color:var(--text)}
+.d-name{font-size:.95rem;color:var(--text-muted);margin-bottom:.2rem}
+.d-meta{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.9rem}
+.d-badge{font-size:.72rem;font-weight:600;padding:.18rem .55rem;border-radius:var(--radius-full)}
+.d-status{display:flex;align-items:center;gap:.65rem;margin-bottom:.9rem;padding:.7rem;background:var(--surface-2);border-radius:var(--radius)}
+.d-cnt-btn{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.d-cnt-btn:hover{border-color:var(--red);color:var(--red)}
+.d-cnt-num{font-size:1.45rem;font-weight:800;min-width:38px;text-align:center}
+.d-cnt-lbl{flex:1;font-size:.82rem;color:var(--text-muted)}
+.danger-zone{border-top:1px solid var(--border);padding-top:.9rem;margin-top:.4rem}
+.btn-danger{background:#fee2e2;color:#dc2626;border:1px solid #fecaca}
+.btn-danger:hover{background:#fecaca}
+[data-theme="dark"] .btn-danger{background:#3d0b0b;color:#f87171;border-color:#7f1d1d}
+/* OCR MODAL */
+.ocr-list{display:flex;flex-direction:column;gap:.3rem;max-height:260px;overflow-y:auto}
+.ocr-item{display:flex;align-items:center;gap:.55rem;padding:.42rem .55rem;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all var(--transition)}
+.ocr-item:hover{border-color:var(--red)}
+.ocr-item input[type="checkbox"]{width:15px;height:15px;accent-color:var(--red);flex-shrink:0}
+.ocr-item.checked{background:var(--green-light);border-color:var(--green)}
+.ocr-item .oi-name{font-size:.78rem;color:var(--text-muted)}
+/* SETTINGS */
+.s-form label{display:block;font-size:.82rem;font-weight:600;margin-bottom:.28rem;margin-top:.8rem}
+.s-form label:first-of-type{margin-top:0}
+.s-form input{width:100%;padding:.52rem .75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:var(--radius);font-size:.85rem;outline:none;transition:border-color var(--transition)}
+.s-form input[type="password"]{font-family:monospace}
+.s-form input:focus{border-color:var(--red)}
+.s-hint{font-size:.72rem;color:var(--text-muted);margin-top:.2rem}
+.tok-status{display:flex;align-items:center;gap:.35rem;font-size:.78rem;margin-top:.3rem}
+.tok-status.ok{color:var(--green)}
+.tok-status.none{color:var(--text-muted)}
+/* TOAST */
+#toast-c{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:.35rem;align-items:center;pointer-events:none}
+@media(min-width:768px){#toast-c{bottom:1.5rem}}
+.toast{background:var(--gray-900);color:#fff;padding:.6rem 1rem;border-radius:var(--radius);font-size:.82rem;font-weight:500;box-shadow:var(--shadow-lg);pointer-events:all;display:flex;align-items:center;gap:.55rem;animation:tin .25s ease;max-width:320px}
+[data-theme="dark"] .toast{background:var(--surface-2);border:1px solid var(--border);color:var(--text)}
+.toast-undo-btn{background:var(--red);color:#fff;border:none;padding:.18rem .5rem;border-radius:5px;font-size:.75rem;font-weight:700;cursor:pointer;flex-shrink:0}
+.toast.out{animation:tout .25s ease forwards}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tout{to{opacity:0;transform:translateY(8px)}}
+/* MISC */
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text-muted)}
+.empty-state h3{font-size:.95rem;margin:.6rem 0 .25rem;color:var(--text)}
+.empty-state p{font-size:.82rem}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="#" onclick="return false;">
+    <svg class="logo-ball" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+    <span>Paniniliste</span>
+    <span class="sub">WM 2026</span>
+  </a>
+  <div class="header-right">
+    <span class="last-upd" id="lastUpd">&#8211;</span>
+    <button class="h-btn" onclick="loadFromGitHub()" title="Aktualisieren" id="refreshBtn">
+      <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i>
+    </button>
+    <button class="h-btn" onclick="openSettings()" title="Einstellungen">
+      <i data-lucide="settings" style="width:16px;height:16px;"></i>
+    </button>
+    <button class="h-btn" onclick="toggleTheme()" title="Dark/Light Mode">
+      <i data-lucide="moon" style="width:16px;height:16px;" id="themeIcon"></i>
+    </button>
+    <button class="h-btn save-btn" onclick="saveData()">
+      <i data-lucide="save" style="width:14px;height:14px;"></i>
+      Speichern
+    </button>
+  </div>
+</header>
+
+<div class="app-layout">
+  <nav class="side-nav" id="sideNav">
+    <button class="active" onclick="showPage('home',this)"><i data-lucide="home" style="width:16px;height:16px;"></i>Übersicht</button>
+    <button onclick="showPage('enter',this)"><i data-lucide="plus-circle" style="width:16px;height:16px;"></i>Eintragen</button>
+    <button onclick="showPage('collection',this)"><i data-lucide="grid-3x3" style="width:16px;height:16px;"></i>Sammlung</button>
+    <button onclick="showPage('missing',this)"><i data-lucide="x-circle" style="width:16px;height:16px;"></i>Fehlend</button>
+    <button onclick="showPage('doubles',this)"><i data-lucide="copy" style="width:16px;height:16px;"></i>Doppelte</button>
+  </nav>
+
+  <main>
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div class="hero-card">
+        <div class="hero-label">Fortschritt</div>
+        <div class="hero-count" id="heroCount">0 / 979</div>
+        <div class="hero-pct" id="heroPct">0.0% gesammelt</div>
+        <div class="prog-track"><div class="prog-fill" id="mainProg" style="width:0%"></div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card c-green"><div class="stat-val" id="stOwned">0</div><div class="stat-lbl">Gesammelt</div></div>
+        <div class="stat-card c-red"><div class="stat-val" id="stMissing">979</div><div class="stat-lbl">Fehlend</div></div>
+        <div class="stat-card c-orange"><div class="stat-val" id="stDoubles">0</div><div class="stat-lbl">Doppelte</div></div>
+        <div class="stat-card c-gold"><div class="stat-val" id="stFoil">0</div><div class="stat-lbl">Foil &#11088;</div></div>
+      </div>
+      <div class="sec-title">Fortschritt nach Team</div>
+      <div class="team-prog-list" id="teamProgList"></div>
+    </div>
+
+    <!-- ENTER -->
+    <div class="page" id="page-enter">
+      <div class="entry-tabs">
+        <button class="e-tab active" onclick="switchTab('photo',this)"><i data-lucide="camera" style="width:14px;height:14px;"></i>Foto-Upload</button>
+        <button class="e-tab" onclick="switchTab('manual',this)"><i data-lucide="keyboard" style="width:14px;height:14px;"></i>Manuell</button>
+      </div>
+      <!-- PHOTO -->
+      <div class="e-panel active" id="panel-photo">
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" accept="image/*" id="ocrFile" onchange="handleOCR(this.files[0])">
+          <div class="uz-icon"><i data-lucide="image-plus" style="width:34px;height:34px;"></i></div>
+          <h3>Sticker-Tüte fotografieren</h3>
+          <p>Bild hochladen oder hier ablegen<br><small style="opacity:.65">Codes auf der Rückseite werden automatisch erkannt</small></p>
+        </div>
+        <div id="ocrPreview" style="display:none;">
+          <div class="ocr-preview">
+            <img id="ocrImg" src="" alt="">
+            <div class="ocr-status" id="ocrStat">OCR startet…</div>
+            <div class="ocr-pbar"><div class="ocr-pbar-fill" id="ocrProg"></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- MANUAL -->
+      <div class="e-panel" id="panel-manual">
+        <div class="manual-row">
+          <input type="text" id="manInput" placeholder="z.B. MEX3 oder MEX3, ARG17, FWC1" oninput="previewInput()" onkeydown="if(event.key==='Enter')addToQueue()">
+          <button class="btn-dbl" id="dblBtn" onclick="toggleDblMode()" title="Als Doppel eintragen">
+            <i data-lucide="copy" style="width:13px;height:13px;"></i>&#215;2
+          </button>
+          <button class="btn btn-primary" onclick="addToQueue()" style="padding:.5rem .8rem;">
+            <i data-lucide="plus" style="width:14px;height:14px;"></i>
+          </button>
+        </div>
+        <div class="preview-card" id="manPreview"><div style="color:var(--text-muted);font-size:.82rem;">Code eingeben um Vorschau zu sehen</div></div>
+        <div class="queue-sec" id="queueSec" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.45rem;">
+            <div class="sec-title" style="margin:0;border:none;padding:0;">Warteschlange</div>
+            <button class="btn btn-ghost btn-sm" onclick="clearQ()">Leeren</button>
+          </div>
+          <div class="queue-list" id="queueList"></div>
+          <button class="btn btn-primary" style="width:100%;" onclick="confirmQueue()">
+            <i data-lucide="check" style="width:14px;height:14px;"></i>
+            Alle eintragen (<span id="qCount">0</span>)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLLECTION -->
+    <div class="page" id="page-collection">
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <span class="search-icon"><i data-lucide="search" style="width:13px;height:13px;"></i></span>
+          <input type="text" id="searchIn" placeholder="Code oder Name…" oninput="renderColl()">
+        </div>
+        <button class="filter-btn active" onclick="setFilter('all',this)">Alle</button>
+        <button class="filter-btn" onclick="setFilter('owned',this)">&#10003; Vorhanden</button>
+        <button class="filter-btn" onclick="setFilter('missing',this)">&#10005; Fehlend</button>
+        <button class="filter-btn" onclick="setFilter('double',this)">&#215;2 Doppelt</button>
+        <button class="filter-btn" onclick="setFilter('foil',this)">&#11088; Foil</button>
+      </div>
+      <div id="collContainer"></div>
+    </div>
+
+    <!-- MISSING -->
+    <div class="page" id="page-missing">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;flex-wrap:wrap;gap:.45rem;">
+        <div class="sec-title" style="margin:0;border:none;padding:0;">Fehlende Sticker</div>
+        <button class="btn btn-secondary btn-sm" onclick="copyMissing()"><i data-lucide="clipboard-copy" style="width:13px;height:13px;"></i> Liste kopieren</button>
+      </div>
+      <div id="missingCont"></div>
+    </div>
+
+    <!-- DOUBLES -->
+    <div class="page" id="page-doubles">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;flex-wrap:wrap;gap:.45rem;">
+        <div class="sec-title" style="margin:0;border:none;padding:0;">Doppelte Sticker</div>
+        <button class="btn btn-secondary btn-sm" onclick="copyDoubles()"><i data-lucide="clipboard-copy" style="width:13px;height:13px;"></i> Liste kopieren</button>
+      </div>
+      <div id="doublesCont"></div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav" id="botNav">
+  <button class="active" onclick="showPage('home',this)"><i data-lucide="home" style="width:19px;height:19px;"></i><span>Übersicht</span></button>
+  <button onclick="showPage('enter',this)"><i data-lucide="plus-circle" style="width:19px;height:19px;"></i><span>Eintragen</span></button>
+  <button onclick="showPage('collection',this)"><i data-lucide="grid-3x3" style="width:19px;height:19px;"></i><span>Sammlung</span></button>
+  <button onclick="showPage('missing',this)"><i data-lucide="x-circle" style="width:19px;height:19px;"></i><span>Fehlend</span></button>
+  <button onclick="showPage('doubles',this)"><i data-lucide="copy" style="width:19px;height:19px;"></i><span>Doppelte</span></button>
+</nav>
+
+<div id="toast-c"></div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay hidden" id="detailMod">
+  <div class="modal">
+    <div class="modal-title"><span>Sticker-Details</span><button class="modal-close" onclick="closeMod('detailMod')"><i data-lucide="x" style="width:17px;height:17px;"></i></button></div>
+    <div class="d-code" id="dCode">&#8211;</div>
+    <div class="d-name" id="dName">&#8211;</div>
+    <div class="d-meta" id="dMeta"></div>
+    <div class="d-status">
+      <button class="d-cnt-btn" onclick="adjCnt(-1)">&#8722;</button>
+      <div class="d-cnt-num" id="dCnt">0</div>
+      <button class="d-cnt-btn" onclick="adjCnt(1)">&#43;</button>
+      <div class="d-cnt-lbl" id="dCntLbl">Nicht vorhanden</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" onclick="adjCnt(1)"><i data-lucide="plus" style="width:12px;height:12px;"></i> Hinzufügen</button>
+      <button class="btn btn-secondary btn-sm" onclick="adjCnt(-1)"><i data-lucide="minus" style="width:12px;height:12px;"></i> Entfernen</button>
+    </div>
+    <div class="danger-zone">
+      <button class="btn btn-danger btn-sm" onclick="deleteSticker()"><i data-lucide="trash-2" style="width:12px;height:12px;"></i> Als fehlend markieren</button>
+    </div>
+  </div>
+</div>
+
+<!-- OCR MODAL -->
+<div class="modal-overlay hidden" id="ocrMod">
+  <div class="modal">
+    <div class="modal-title"><span>Erkannte Sticker bestätigen</span><button class="modal-close" onclick="closeMod('ocrMod')"><i data-lucide="x" style="width:17px;height:17px;"></i></button></div>
+    <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:.65rem;" id="ocrDesc"></div>
+    <div class="ocr-list" id="ocrList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="confirmOCR()"><i data-lucide="check" style="width:14px;height:14px;"></i> Ausgewählte eintragen</button>
+      <button class="btn btn-secondary" onclick="closeMod('ocrMod')">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay hidden" id="settingsMod">
+  <div class="modal">
+    <div class="modal-title"><span>Einstellungen</span><button class="modal-close" onclick="closeMod('settingsMod')"><i data-lucide="x" style="width:17px;height:17px;"></i></button></div>
+    <div class="s-form">
+      <label>GitHub Raw URL (sticker-state.json)</label>
+      <input type="url" id="sRawUrl" placeholder="https://raw.githubusercontent.com/USER/REPO/main/sticker-state.json">
+      <div class="s-hint">Raw-URL zur JSON-Datei in deinem Repo</div>
+      <label>GitHub Repository (USER/REPO)</label>
+      <input type="text" id="sRepo" placeholder="USERNAME/REPOSITORY">
+      <label>Branch</label>
+      <input type="text" id="sBranch" placeholder="main">
+      <label>GitHub Personal Access Token</label>
+      <input type="password" id="sToken" placeholder="ghp_... (nur im RAM, nicht gespeichert)">
+      <div class="tok-status none" id="tokStat"><i data-lucide="lock" style="width:12px;height:12px;"></i>&nbsp;Kein Token gesetzt</div>
+      <div class="s-hint">Token wird <strong>nicht</strong> in LocalStorage oder Cookies gespeichert.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveSettings()"><i data-lucide="save" style="width:14px;height:14px;"></i> Speichern</button>
+      <button class="btn btn-secondary" onclick="closeMod('settingsMod')">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+let GITHUB_RAW_URL = 'https://raw.githubusercontent.com/USERNAME/REPO/main/sticker-state.json';
+let GITHUB_REPO = 'USERNAME/REPO';
+let GITHUB_BRANCH = 'main';
+let GITHUB_TOKEN = null;
+
+// ============================================================
+// STICKER DATA
+// ============================================================
+const STICKERS = [{"code":"00","name":"Panini Logo","team":"FWC","category":"intro","foil":true},{"code":"FWC1","name":"Official Emblem 1/2","team":"FWC","category":"intro","foil":true},{"code":"FWC2","name":"Official Emblem 2/2","team":"FWC","category":"intro","foil":true},{"code":"FWC3","name":"Official Mascots","team":"FWC","category":"intro","foil":true},{"code":"FWC4","name":"Official Slogan","team":"FWC","category":"intro","foil":true},{"code":"FWC5","name":"Official Ball","team":"FWC","category":"intro","foil":true},{"code":"FWC6","name":"Canada - Host Countries & Cities","team":"FWC","category":"intro","foil":true},{"code":"FWC7","name":"Mexico - Host Countries & Cities","team":"FWC","category":"intro","foil":true},{"code":"FWC8","name":"USA - Host Countries & Cities","team":"FWC","category":"intro","foil":true},{"code":"MEX1","name":"Team Logo","team":"Mexico","category":"badge","foil":true},{"code":"MEX2","name":"Luis Malagón","team":"Mexico","category":"player","foil":false},{"code":"MEX3","name":"Johan Vasquez","team":"Mexico","category":"player","foil":false},{"code":"MEX4","name":"Jorge Sánchez","team":"Mexico","category":"player","foil":false},{"code":"MEX5","name":"Cesar Montes","team":"Mexico","category":"player","foil":false},{"code":"MEX6","name":"Jesus Gallardo","team":"Mexico","category":"player","foil":false},{"code":"MEX7","name":"Israel Reyes","team":"Mexico","category":"player","foil":false},{"code":"MEX8","name":"Diego Lainez","team":"Mexico","category":"player","foil":false},{"code":"MEX9","name":"Carlos Rodriguez","team":"Mexico","category":"player","foil":false},{"code":"MEX10","name":"Edson Alvarez","team":"Mexico","category":"player","foil":false},{"code":"MEX11","name":"Orbelin Pineda","team":"Mexico","category":"player","foil":false},{"code":"MEX12","name":"Marcel Ruiz","team":"Mexico","category":"player","foil":false},{"code":"MEX13","name":"Team Photo","team":"Mexico","category":"team_photo","foil":false},{"code":"MEX14","name":"Érick Sánchez","team":"Mexico","category":"player","foil":false},{"code":"MEX15","name":"Hirving Lozano","team":"Mexico","category":"player","foil":false},{"code":"MEX16","name":"Santiago Giménez","team":"Mexico","category":"player","foil":false},{"code":"MEX17","name":"Raúl Jiménez","team":"Mexico","category":"player","foil":false},{"code":"MEX18","name":"Alexis Vega","team":"Mexico","category":"player","foil":false},{"code":"MEX19","name":"Roberto Alvarado","team":"Mexico","category":"player","foil":false},{"code":"MEX20","name":"Cesar Huerta","team":"Mexico","category":"player","foil":false},{"code":"RSA1","name":"Team Logo","team":"South Africa","category":"badge","foil":true},{"code":"RSA2","name":"Ronwen Williams","team":"South Africa","category":"player","foil":false},{"code":"RSA3","name":"Sipho Chaine","team":"South Africa","category":"player","foil":false},{"code":"RSA4","name":"Aubrey Modiba","team":"South Africa","category":"player","foil":false},{"code":"RSA5","name":"Samukele Kabini","team":"South Africa","category":"player","foil":false},{"code":"RSA6","name":"Mbekezeli Mbokazi","team":"South Africa","category":"player","foil":false},{"code":"RSA7","name":"Khulumani Ndamane","team":"South Africa","category":"player","foil":false},{"code":"RSA8","name":"Siyabonga Ngezana","team":"South Africa","category":"player","foil":false},{"code":"RSA9","name":"Khuliso Mudau","team":"South Africa","category":"player","foil":false},{"code":"RSA10","name":"Nkosinathi Sibisi","team":"South Africa","category":"player","foil":false},{"code":"RSA11","name":"Teboho Mokoena","team":"South Africa","category":"player","foil":false},{"code":"RSA12","name":"Thalente Mbatha","team":"South Africa","category":"player","foil":false},{"code":"RSA13","name":"Team Photo","team":"South Africa","category":"team_photo","foil":false},{"code":"RSA14","name":"Bathasi Aubaas","team":"South Africa","category":"player","foil":false},{"code":"RSA15","name":"Yaya Sithole","team":"South Africa","category":"player","foil":false},{"code":"RSA16","name":"Sipho Mbule","team":"South Africa","category":"player","foil":false},{"code":"RSA17","name":"Lyle Foster","team":"South Africa","category":"player","foil":false},{"code":"RSA18","name":"Iqraam Rayners","team":"South Africa","category":"player","foil":false},{"code":"RSA19","name":"Mohau Nkota","team":"South Africa","category":"player","foil":false},{"code":"RSA20","name":"Oswin Appollis","team":"South Africa","category":"player","foil":false},{"code":"KOR1","name":"Team Logo","team":"South Korea","category":"badge","foil":true},{"code":"KOR2","name":"Hyeon-woo Jo","team":"South Korea","category":"player","foil":false},{"code":"KOR3","name":"Seung-Gyu Kim","team":"South Korea","category":"player","foil":false},{"code":"KOR4","name":"Min-jae Kim","team":"South Korea","category":"player","foil":false},{"code":"KOR5","name":"Yu-min Cho","team":"South Korea","category":"player","foil":false},{"code":"KOR6","name":"Young-woo Seol","team":"South Korea","category":"player","foil":false},{"code":"KOR7","name":"Han-beom Lee","team":"South Korea","category":"player","foil":false},{"code":"KOR8","name":"Tae-seok Lee","team":"South Korea","category":"player","foil":false},{"code":"KOR9","name":"Myung-jae Lee","team":"South Korea","category":"player","foil":false},{"code":"KOR10","name":"Jae-sung Lee","team":"South Korea","category":"player","foil":false},{"code":"KOR11","name":"In-beom Hwang","team":"South Korea","category":"player","foil":false},{"code":"KOR12","name":"Kang-in Lee","team":"South Korea","category":"player","foil":false},{"code":"KOR13","name":"Team Photo","team":"South Korea","category":"team_photo","foil":false},{"code":"KOR14","name":"Seung-ho Paik","team":"South Korea","category":"player","foil":false},{"code":"KOR15","name":"Jens Castrop","team":"South Korea","category":"player","foil":false},{"code":"KOR16","name":"Dongg-yeong Lee","team":"South Korea","category":"player","foil":false},{"code":"KOR17","name":"Gue-sung Cho","team":"South Korea","category":"player","foil":false},{"code":"KOR18","name":"Heung-min Son","team":"South Korea","category":"player","foil":false},{"code":"KOR19","name":"Hee-chan Hwang","team":"South Korea","category":"player","foil":false},{"code":"KOR20","name":"Hyeon-Gyu Oh","team":"South Korea","category":"player","foil":false},{"code":"CZE1","name":"Team Logo","team":"Czechia","category":"badge","foil":true},{"code":"CZE2","name":"Matej Kovar","team":"Czechia","category":"player","foil":false},{"code":"CZE3","name":"Jindrich Stanek","team":"Czechia","category":"player","foil":false},{"code":"CZE4","name":"Ladislav Krejci","team":"Czechia","category":"player","foil":false},{"code":"CZE5","name":"Vladimir Coufal","team":"Czechia","category":"player","foil":false},{"code":"CZE6","name":"Jaroslav Zeleny","team":"Czechia","category":"player","foil":false},{"code":"CZE7","name":"Tomas Holes","team":"Czechia","category":"player","foil":false},{"code":"CZE8","name":"David Zima","team":"Czechia","category":"player","foil":false},{"code":"CZE9","name":"Michal Sadilek","team":"Czechia","category":"player","foil":false},{"code":"CZE10","name":"Lukas Provod","team":"Czechia","category":"player","foil":false},{"code":"CZE11","name":"Lukas Cerv","team":"Czechia","category":"player","foil":false},{"code":"CZE12","name":"Tomas Soucek","team":"Czechia","category":"player","foil":false},{"code":"CZE13","name":"Team Photo","team":"Czechia","category":"team_photo","foil":false},{"code":"CZE14","name":"Pavel Sulc","team":"Czechia","category":"player","foil":false},{"code":"CZE15","name":"Matej Vydra","team":"Czechia","category":"player","foil":false},{"code":"CZE16","name":"Vasil Kusej","team":"Czechia","category":"player","foil":false},{"code":"CZE17","name":"Tomas Chory","team":"Czechia","category":"player","foil":false},{"code":"CZE18","name":"Vaclav Cerny","team":"Czechia","category":"player","foil":false},{"code":"CZE19","name":"Adam Hlozek","team":"Czechia","category":"player","foil":false},{"code":"CZE20","name":"Patrik Schick","team":"Czechia","category":"player","foil":false},{"code":"CAN1","name":"Team Logo","team":"Canada","category":"badge","foil":true},{"code":"CAN2","name":"Dayne St.Clair","team":"Canada","category":"player","foil":false},{"code":"CAN3","name":"Alphonso Davies","team":"Canada","category":"player","foil":false},{"code":"CAN4","name":"Alistair Johnston","team":"Canada","category":"player","foil":false},{"code":"CAN5","name":"Samuel Adekugbe","team":"Canada","category":"player","foil":false},{"code":"CAN6","name":"Riche Larvea","team":"Canada","category":"player","foil":false},{"code":"CAN7","name":"Derek Cornelius","team":"Canada","category":"player","foil":false},{"code":"CAN8","name":"Moïse Bombito","team":"Canada","category":"player","foil":false},{"code":"CAN9","name":"Kamal Miller","team":"Canada","category":"player","foil":false},{"code":"CAN10","name":"Stephen Eustáquio","team":"Canada","category":"player","foil":false},{"code":"CAN11","name":"Ismaël Koné","team":"Canada","category":"player","foil":false},{"code":"CAN12","name":"Jonathan Osorio","team":"Canada","category":"player","foil":false},{"code":"CAN13","name":"Team Photo","team":"Canada","category":"team_photo","foil":false},{"code":"CAN14","name":"Jacob Shaffelburg","team":"Canada","category":"player","foil":false},{"code":"CAN15","name":"Mathieu Choinière","team":"Canada","category":"player","foil":false},{"code":"CAN16","name":"Niko Sigur","team":"Canada","category":"player","foil":false},{"code":"CAN17","name":"Tajon Buchanan","team":"Canada","category":"player","foil":false},{"code":"CAN18","name":"Liam Millar","team":"Canada","category":"player","foil":false},{"code":"CAN19","name":"Cyle Larin","team":"Canada","category":"player","foil":false},{"code":"CAN20","name":"Jonathan David","team":"Canada","category":"player","foil":false},{"code":"BIH1","name":"Team Logo","team":"Bosnia and Herzegovina","category":"badge","foil":true},{"code":"BIH2","name":"Nikola Vasilj","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH3","name":"Amer Dedic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH4","name":"Sead Kolasinac","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH5","name":"Tarik Muharemovic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH6","name":"Nihad Mujakic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH7","name":"Nikola Katic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH8","name":"Amir Hadziahmetovic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH9","name":"Benjamin Tahirovic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH10","name":"Armin Gigovic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH11","name":"Ivan Sunjic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH12","name":"Ivan Basic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH13","name":"Team Photo","team":"Bosnia and Herzegovina","category":"team_photo","foil":false},{"code":"BIH14","name":"Dzenis Burnic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH15","name":"Esmir Bajraktarevic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH16","name":"Amar Memic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH17","name":"Ermedin Demirovic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH18","name":"Edin Dzeko","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH19","name":"Samed Bazdar","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"BIH20","name":"Haris Tabakovic","team":"Bosnia and Herzegovina","category":"player","foil":false},{"code":"QAT1","name":"Team Logo","team":"Qatar","category":"badge","foil":true},{"code":"QAT2","name":"Meshaal Barsham","team":"Qatar","category":"player","foil":false},{"code":"QAT3","name":"Sultan Albrake","team":"Qatar","category":"player","foil":false},{"code":"QAT4","name":"Lucas Mendes","team":"Qatar","category":"player","foil":false},{"code":"QAT5","name":"Homam Ahmed","team":"Qatar","category":"player","foil":false},{"code":"QAT6","name":"Boualem Khoukhi","team":"Qatar","category":"player","foil":false},{"code":"QAT7","name":"Pedro Miguel","team":"Qatar","category":"player","foil":false},{"code":"QAT8","name":"Tarek Salman","team":"Qatar","category":"player","foil":false},{"code":"QAT9","name":"Mohamed Al-Mannai","team":"Qatar","category":"player","foil":false},{"code":"QAT10","name":"Karim Boudiaf","team":"Qatar","category":"player","foil":false},{"code":"QAT11","name":"Assim Madibo","team":"Qatar","category":"player","foil":false},{"code":"QAT12","name":"Ahmed Fatehi","team":"Qatar","category":"player","foil":false},{"code":"QAT13","name":"Team Photo","team":"Qatar","category":"team_photo","foil":false},{"code":"QAT14","name":"Mohammed Waad","team":"Qatar","category":"player","foil":false},{"code":"QAT15","name":"Abdulaziz Hatem","team":"Qatar","category":"player","foil":false},{"code":"QAT16","name":"Hassan Al-Haydos","team":"Qatar","category":"player","foil":false},{"code":"QAT17","name":"Edmilson Junior","team":"Qatar","category":"player","foil":false},{"code":"QAT18","name":"Akram Hassan Afif","team":"Qatar","category":"player","foil":false},{"code":"QAT19","name":"Ahmed Al Ganehi","team":"Qatar","category":"player","foil":false},{"code":"QAT20","name":"Almoez Ali","team":"Qatar","category":"player","foil":false},{"code":"SUI1","name":"Team Logo","team":"Switzerland","category":"badge","foil":true},{"code":"SUI2","name":"Gregor Kobel","team":"Switzerland","category":"player","foil":false},{"code":"SUI3","name":"Yvon Mvogo","team":"Switzerland","category":"player","foil":false},{"code":"SUI4","name":"Manuel Akanji","team":"Switzerland","category":"player","foil":false},{"code":"SUI5","name":"Ricardo Rodriguez","team":"Switzerland","category":"player","foil":false},{"code":"SUI6","name":"Nico Elvedi","team":"Switzerland","category":"player","foil":false},{"code":"SUI7","name":"Aurèle Amenda","team":"Switzerland","category":"player","foil":false},{"code":"SUI8","name":"Silvan Widmer","team":"Switzerland","category":"player","foil":false},{"code":"SUI9","name":"Granit Xhaka","team":"Switzerland","category":"player","foil":false},{"code":"SUI10","name":"Denis Zakaria","team":"Switzerland","category":"player","foil":false},{"code":"SUI11","name":"Remo Freuler","team":"Switzerland","category":"player","foil":false},{"code":"SUI12","name":"Fabian Rieder","team":"Switzerland","category":"player","foil":false},{"code":"SUI13","name":"Team Photo","team":"Switzerland","category":"team_photo","foil":false},{"code":"SUI14","name":"Ardon Jashari","team":"Switzerland","category":"player","foil":false},{"code":"SUI15","name":"Johan Manzambi","team":"Switzerland","category":"player","foil":false},{"code":"SUI16","name":"Michel Aebischer","team":"Switzerland","category":"player","foil":false},{"code":"SUI17","name":"Breel Embolo","team":"Switzerland","category":"player","foil":false},{"code":"SUI18","name":"Ruben Vargas","team":"Switzerland","category":"player","foil":false},{"code":"SUI19","name":"Dan Ndoye","team":"Switzerland","category":"player","foil":false},{"code":"SUI20","name":"Zeki Amdouni","team":"Switzerland","category":"player","foil":false},{"code":"BRA1","name":"Team Logo","team":"Brazil","category":"badge","foil":true},{"code":"BRA2","name":"Alisson","team":"Brazil","category":"player","foil":false},{"code":"BRA3","name":"Bento","team":"Brazil","category":"player","foil":false},{"code":"BRA4","name":"Marquinhos","team":"Brazil","category":"player","foil":false},{"code":"BRA5","name":"Éder Militão","team":"Brazil","category":"player","foil":false},{"code":"BRA6","name":"Gabriel Magalhães","team":"Brazil","category":"player","foil":false},{"code":"BRA7","name":"Danilo","team":"Brazil","category":"player","foil":false},{"code":"BRA8","name":"Wesley","team":"Brazil","category":"player","foil":false},{"code":"BRA9","name":"Lucas Paquetá","team":"Brazil","category":"player","foil":false},{"code":"BRA10","name":"Casemiro","team":"Brazil","category":"player","foil":false},{"code":"BRA11","name":"Bruno Guimarães","team":"Brazil","category":"player","foil":false},{"code":"BRA12","name":"Luiz Henrique","team":"Brazil","category":"player","foil":false},{"code":"BRA13","name":"Team Photo","team":"Brazil","category":"team_photo","foil":false},{"code":"BRA14","name":"Vinicius Júnior","team":"Brazil","category":"player","foil":false},{"code":"BRA15","name":"Rodrygo","team":"Brazil","category":"player","foil":false},{"code":"BRA16","name":"João Pedro","team":"Brazil","category":"player","foil":false},{"code":"BRA17","name":"Matheus Cunha","team":"Brazil","category":"player","foil":false},{"code":"BRA18","name":"Gabriel Martinelli","team":"Brazil","category":"player","foil":false},{"code":"BRA19","name":"Raphinha","team":"Brazil","category":"player","foil":false},{"code":"BRA20","name":"Estévão","team":"Brazil","category":"player","foil":false},{"code":"MAR1","name":"Team Logo","team":"Morocco","category":"badge","foil":true},{"code":"MAR2","name":"Yassine Bounou","team":"Morocco","category":"player","foil":false},{"code":"MAR3","name":"Munir El Kajoui","team":"Morocco","category":"player","foil":false},{"code":"MAR4","name":"Achraf Hakimi","team":"Morocco","category":"player","foil":false},{"code":"MAR5","name":"Noussair Mazraoui","team":"Morocco","category":"player","foil":false},{"code":"MAR6","name":"Nayef Aguerd","team":"Morocco","category":"player","foil":false},{"code":"MAR7","name":"Roman Saiss","team":"Morocco","category":"player","foil":false},{"code":"MAR8","name":"Jawad El Yamiq","team":"Morocco","category":"player","foil":false},{"code":"MAR9","name":"Adam Masina","team":"Morocco","category":"player","foil":false},{"code":"MAR10","name":"Sofyan Amrabat","team":"Morocco","category":"player","foil":false},{"code":"MAR11","name":"Azzedine Ounahi","team":"Morocco","category":"player","foil":false},{"code":"MAR12","name":"Eliesse Ben Seghir","team":"Morocco","category":"player","foil":false},{"code":"MAR13","name":"Team Photo","team":"Morocco","category":"team_photo","foil":false},{"code":"MAR14","name":"Bilal El Khannouss","team":"Morocco","category":"player","foil":false},{"code":"MAR15","name":"Ismael Saibari","team":"Morocco","category":"player","foil":false},{"code":"MAR16","name":"Youssef En-Nesyri","team":"Morocco","category":"player","foil":false},{"code":"MAR17","name":"Abde Ezzalzouli","team":"Morocco","category":"player","foil":false},{"code":"MAR18","name":"Soufiane Rahimi","team":"Morocco","category":"player","foil":false},{"code":"MAR19","name":"Brahim Diaz","team":"Morocco","category":"player","foil":false},{"code":"MAR20","name":"Ayoub El Kaabi","team":"Morocco","category":"player","foil":false},{"code":"HAI1","name":"Team Logo","team":"Haiti","category":"badge","foil":true},{"code":"HAI2","name":"Johny Placide","team":"Haiti","category":"player","foil":false},{"code":"HAI3","name":"Carlens Arcus","team":"Haiti","category":"player","foil":false},{"code":"HAI4","name":"Martin Expérience","team":"Haiti","category":"player","foil":false},{"code":"HAI5","name":"Jean-Kevin Duverne","team":"Haiti","category":"player","foil":false},{"code":"HAI6","name":"Ricardo Adé","team":"Haiti","category":"player","foil":false},{"code":"HAI7","name":"Duke Lacroix","team":"Haiti","category":"player","foil":false},{"code":"HAI8","name":"Garven Metusala","team":"Haiti","category":"player","foil":false},{"code":"HAI9","name":"Hannes Delcroix","team":"Haiti","category":"player","foil":false},{"code":"HAI10","name":"Leverton Pierre","team":"Haiti","category":"player","foil":false},{"code":"HAI11","name":"Danley Jean Jacques","team":"Haiti","category":"player","foil":false},{"code":"HAI12","name":"Jean-Ricner Bellegarde","team":"Haiti","category":"player","foil":false},{"code":"HAI13","name":"Team Photo","team":"Haiti","category":"team_photo","foil":false},{"code":"HAI14","name":"Christopher Attys","team":"Haiti","category":"player","foil":false},{"code":"HAI15","name":"Derrick Etienne Jr","team":"Haiti","category":"player","foil":false},{"code":"HAI16","name":"Josue Casimir","team":"Haiti","category":"player","foil":false},{"code":"HAI17","name":"Ruben Providence","team":"Haiti","category":"player","foil":false},{"code":"HAI18","name":"Duckens Nazon","team":"Haiti","category":"player","foil":false},{"code":"HAI19","name":"Louicius Deedson","team":"Haiti","category":"player","foil":false},{"code":"HAI20","name":"Frantzdy Pierrot","team":"Haiti","category":"player","foil":false},{"code":"SCO1","name":"Team Logo","team":"Scotland","category":"badge","foil":true},{"code":"SCO2","name":"Angus Gunn","team":"Scotland","category":"player","foil":false},{"code":"SCO3","name":"Jack Hendry","team":"Scotland","category":"player","foil":false},{"code":"SCO4","name":"Kieran Tierney","team":"Scotland","category":"player","foil":false},{"code":"SCO5","name":"Aaron Hickey","team":"Scotland","category":"player","foil":false},{"code":"SCO6","name":"Andrew Robertson","team":"Scotland","category":"player","foil":false},{"code":"SCO7","name":"Scott McKenna","team":"Scotland","category":"player","foil":false},{"code":"SCO8","name":"John Souttar","team":"Scotland","category":"player","foil":false},{"code":"SCO9","name":"Anthony Ralston","team":"Scotland","category":"player","foil":false},{"code":"SCO10","name":"Grant Hanley","team":"Scotland","category":"player","foil":false},{"code":"SCO11","name":"Scott McTominay","team":"Scotland","category":"player","foil":false},{"code":"SCO12","name":"Billy Gilmour","team":"Scotland","category":"player","foil":false},{"code":"SCO13","name":"Team Photo","team":"Scotland","category":"team_photo","foil":false},{"code":"SCO14","name":"Lewis Ferguson","team":"Scotland","category":"player","foil":false},{"code":"SCO15","name":"Ryan Christie","team":"Scotland","category":"player","foil":false},{"code":"SCO16","name":"Kenny McLean","team":"Scotland","category":"player","foil":false},{"code":"SCO17","name":"John McGinn","team":"Scotland","category":"player","foil":false},{"code":"SCO18","name":"Lyndon Dykes","team":"Scotland","category":"player","foil":false},{"code":"SCO19","name":"Che Adams","team":"Scotland","category":"player","foil":false},{"code":"SCO20","name":"Ben Gannon-Doak","team":"Scotland","category":"player","foil":false},{"code":"USA1","name":"Team Logo","team":"USA","category":"badge","foil":true},{"code":"USA2","name":"Matt Freese","team":"USA","category":"player","foil":false},{"code":"USA3","name":"Chris Richards","team":"USA","category":"player","foil":false},{"code":"USA4","name":"Tim Ream","team":"USA","category":"player","foil":false},{"code":"USA5","name":"Mark McKenzie","team":"USA","category":"player","foil":false},{"code":"USA6","name":"Alex Freeman","team":"USA","category":"player","foil":false},{"code":"USA7","name":"Antonee Robinson","team":"USA","category":"player","foil":false},{"code":"USA8","name":"Tyler Adams","team":"USA","category":"player","foil":false},{"code":"USA9","name":"Tanner Tessmann","team":"USA","category":"player","foil":false},{"code":"USA10","name":"Weston McKennie","team":"USA","category":"player","foil":false},{"code":"USA11","name":"Christian Roldan","team":"USA","category":"player","foil":false},{"code":"USA12","name":"Timothy Weah","team":"USA","category":"player","foil":false},{"code":"USA13","name":"Team Photo","team":"USA","category":"team_photo","foil":false},{"code":"USA14","name":"Diego Luna","team":"USA","category":"player","foil":false},{"code":"USA15","name":"Malik Tillman","team":"USA","category":"player","foil":false},{"code":"USA16","name":"Christian Pulisic","team":"USA","category":"player","foil":false},{"code":"USA17","name":"Brenden Aaronson","team":"USA","category":"player","foil":false},{"code":"USA18","name":"Ricardo Pepi","team":"USA","category":"player","foil":false},{"code":"USA19","name":"Haji Wright","team":"USA","category":"player","foil":false},{"code":"USA20","name":"Folarin Balogun","team":"USA","category":"player","foil":false},{"code":"PAR1","name":"Team Logo","team":"Paraguay","category":"badge","foil":true},{"code":"PAR2","name":"Roberto Fernandez","team":"Paraguay","category":"player","foil":false},{"code":"PAR3","name":"Orlando Gill","team":"Paraguay","category":"player","foil":false},{"code":"PAR4","name":"Gustavo Gomez","team":"Paraguay","category":"player","foil":false},{"code":"PAR5","name":"Fabián Balbuena","team":"Paraguay","category":"player","foil":false},{"code":"PAR6","name":"Juan José Cáceres","team":"Paraguay","category":"player","foil":false},{"code":"PAR7","name":"Omar Alderete","team":"Paraguay","category":"player","foil":false},{"code":"PAR8","name":"Junior Alonso","team":"Paraguay","category":"player","foil":false},{"code":"PAR9","name":"Mathías Villasanti","team":"Paraguay","category":"player","foil":false},{"code":"PAR10","name":"Diego Gomez","team":"Paraguay","category":"player","foil":false},{"code":"PAR11","name":"Damián Bobadilla","team":"Paraguay","category":"player","foil":false},{"code":"PAR12","name":"Andres Cubas","team":"Paraguay","category":"player","foil":false},{"code":"PAR13","name":"Team Photo","team":"Paraguay","category":"team_photo","foil":false},{"code":"PAR14","name":"Matias Galarza Fonda","team":"Paraguay","category":"player","foil":false},{"code":"PAR15","name":"Julio Enciso","team":"Paraguay","category":"player","foil":false},{"code":"PAR16","name":"Alejandro Romero Gamarra","team":"Paraguay","category":"player","foil":false},{"code":"PAR17","name":"Miguel Almirón","team":"Paraguay","category":"player","foil":false},{"code":"PAR18","name":"Ramon Sosa","team":"Paraguay","category":"player","foil":false},{"code":"PAR19","name":"Angel Romero","team":"Paraguay","category":"player","foil":false},{"code":"PAR20","name":"Antonio Sanabria","team":"Paraguay","category":"player","foil":false},{"code":"AUS1","name":"Team Logo","team":"Australia","category":"badge","foil":true},{"code":"AUS2","name":"Mathew Ryan","team":"Australia","category":"player","foil":false},{"code":"AUS3","name":"Joe Gauci","team":"Australia","category":"player","foil":false},{"code":"AUS4","name":"Harry Souttar","team":"Australia","category":"player","foil":false},{"code":"AUS5","name":"Alessandro Circati","team":"Australia","category":"player","foil":false},{"code":"AUS6","name":"Jordan Bos","team":"Australia","category":"player","foil":false},{"code":"AUS7","name":"Aziz Behich","team":"Australia","category":"player","foil":false},{"code":"AUS8","name":"Cameron Burgess","team":"Australia","category":"player","foil":false},{"code":"AUS9","name":"Lewis Miller","team":"Australia","category":"player","foil":false},{"code":"AUS10","name":"Milos Degenek","team":"Australia","category":"player","foil":false},{"code":"AUS11","name":"Jackson Irvine","team":"Australia","category":"player","foil":false},{"code":"AUS12","name":"Riley McGree","team":"Australia","category":"player","foil":false},{"code":"AUS13","name":"Team Photo","team":"Australia","category":"team_photo","foil":false},{"code":"AUS14","name":"Aiden O'Neill","team":"Australia","category":"player","foil":false},{"code":"AUS15","name":"Connor Metcalfe","team":"Australia","category":"player","foil":false},{"code":"AUS16","name":"Patrick Yazbek","team":"Australia","category":"player","foil":false},{"code":"AUS17","name":"Craig Goodwin","team":"Australia","category":"player","foil":false},{"code":"AUS18","name":"Kusini Vengi","team":"Australia","category":"player","foil":false},{"code":"AUS19","name":"Nestory Irankunda","team":"Australia","category":"player","foil":false},{"code":"AUS20","name":"Mohamed Touré","team":"Australia","category":"player","foil":false},{"code":"TUR1","name":"Team Logo","team":"Türkiye","category":"badge","foil":true},{"code":"TUR2","name":"Ugurcan Cakir","team":"Türkiye","category":"player","foil":false},{"code":"TUR3","name":"Mert Muldur","team":"Türkiye","category":"player","foil":false},{"code":"TUR4","name":"Zeki Celik","team":"Türkiye","category":"player","foil":false},{"code":"TUR5","name":"Abdulkerim Bardakci","team":"Türkiye","category":"player","foil":false},{"code":"TUR6","name":"Caglar Soyuncu","team":"Türkiye","category":"player","foil":false},{"code":"TUR7","name":"Merih Demiral","team":"Türkiye","category":"player","foil":false},{"code":"TUR8","name":"Ferdi Kadioglu","team":"Türkiye","category":"player","foil":false},{"code":"TUR9","name":"Kaan Ayhan","team":"Türkiye","category":"player","foil":false},{"code":"TUR10","name":"Ismail Yuksek","team":"Türkiye","category":"player","foil":false},{"code":"TUR11","name":"Hakan Calhanoglu","team":"Türkiye","category":"player","foil":false},{"code":"TUR12","name":"Orkun Kokcu","team":"Türkiye","category":"player","foil":false},{"code":"TUR13","name":"Team Photo","team":"Türkiye","category":"team_photo","foil":false},{"code":"TUR14","name":"Arda Guler","team":"Türkiye","category":"player","foil":false},{"code":"TUR15","name":"Irfan Can Kahveci","team":"Türkiye","category":"player","foil":false},{"code":"TUR16","name":"Yunus Akgun","team":"Türkiye","category":"player","foil":false},{"code":"TUR17","name":"Can Uzun","team":"Türkiye","category":"player","foil":false},{"code":"TUR18","name":"Baris Alper Yilmaz","team":"Türkiye","category":"player","foil":false},{"code":"TUR19","name":"Kerem Akturkoglu","team":"Türkiye","category":"player","foil":false},{"code":"TUR20","name":"Kenan Yildiz","team":"Türkiye","category":"player","foil":false},{"code":"GER1","name":"Team Logo","team":"Germany","category":"badge","foil":true},{"code":"GER2","name":"Marc-André ter Stegen","team":"Germany","category":"player","foil":false},{"code":"GER3","name":"Jonathan Tah","team":"Germany","category":"player","foil":false},{"code":"GER4","name":"David Raum","team":"Germany","category":"player","foil":false},{"code":"GER5","name":"Nico Schlotterbeck","team":"Germany","category":"player","foil":false},{"code":"GER6","name":"Antonio Rüdiger","team":"Germany","category":"player","foil":false},{"code":"GER7","name":"Waldemar Anton","team":"Germany","category":"player","foil":false},{"code":"GER8","name":"Ridle Baku","team":"Germany","category":"player","foil":false},{"code":"GER9","name":"Maximilian Mittelstadt","team":"Germany","category":"player","foil":false},{"code":"GER10","name":"Joshua Kimmich","team":"Germany","category":"player","foil":false},{"code":"GER11","name":"Florian Wirtz","team":"Germany","category":"player","foil":false},{"code":"GER12","name":"Felix Nmecha","team":"Germany","category":"player","foil":false},{"code":"GER13","name":"Team Photo","team":"Germany","category":"team_photo","foil":false},{"code":"GER14","name":"Leon Goretzka","team":"Germany","category":"player","foil":false},{"code":"GER15","name":"Jamal Musiala","team":"Germany","category":"player","foil":false},{"code":"GER16","name":"Serge Gnabry","team":"Germany","category":"player","foil":false},{"code":"GER17","name":"Kai Havertz","team":"Germany","category":"player","foil":false},{"code":"GER18","name":"Leroy Sane","team":"Germany","category":"player","foil":false},{"code":"GER19","name":"Karim Adeyemi","team":"Germany","category":"player","foil":false},{"code":"GER20","name":"Nick Woltemade","team":"Germany","category":"player","foil":false},{"code":"CUW1","name":"Team Logo","team":"Curaçao","category":"badge","foil":true},{"code":"CUW2","name":"Eloy Room","team":"Curaçao","category":"player","foil":false},{"code":"CUW3","name":"Armando Obispo","team":"Curaçao","category":"player","foil":false},{"code":"CUW4","name":"Sherel Floranus","team":"Curaçao","category":"player","foil":false},{"code":"CUW5","name":"Jurien Gaari","team":"Curaçao","category":"player","foil":false},{"code":"CUW6","name":"Joshua Brenet","team":"Curaçao","category":"player","foil":false},{"code":"CUW7","name":"Roshon Van Eijma","team":"Curaçao","category":"player","foil":false},{"code":"CUW8","name":"Shurandy Sambo","team":"Curaçao","category":"player","foil":false},{"code":"CUW9","name":"Livano Comenencia","team":"Curaçao","category":"player","foil":false},{"code":"CUW10","name":"Godfried Roemeratoe","team":"Curaçao","category":"player","foil":false},{"code":"CUW11","name":"Juninho Bacuna","team":"Curaçao","category":"player","foil":false},{"code":"CUW12","name":"Leandro Bacuna","team":"Curaçao","category":"player","foil":false},{"code":"CUW13","name":"Team Photo","team":"Curaçao","category":"team_photo","foil":false},{"code":"CUW14","name":"Tahith Chong","team":"Curaçao","category":"player","foil":false},{"code":"CUW15","name":"Kenji Gorre","team":"Curaçao","category":"player","foil":false},{"code":"CUW16","name":"Jearl Margaritha","team":"Curaçao","category":"player","foil":false},{"code":"CUW17","name":"Jurgen Locadia","team":"Curaçao","category":"player","foil":false},{"code":"CUW18","name":"Jeremy Antonisse","team":"Curaçao","category":"player","foil":false},{"code":"CUW19","name":"Gervane Kastaneer","team":"Curaçao","category":"player","foil":false},{"code":"CUW20","name":"Sontje Hansen","team":"Curaçao","category":"player","foil":false},{"code":"CIV1","name":"Team Logo","team":"Ivory Coast","category":"badge","foil":true},{"code":"CIV2","name":"Yahia Fofana","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV3","name":"Ghislain Konan","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV4","name":"Wilfried Singo","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV5","name":"Odilon Kossounou","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV6","name":"Evan Ndicka","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV7","name":"Willy Boly","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV8","name":"Emmanuel Agbadou","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV9","name":"Ousmane Diomande","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV10","name":"Franck Kessie","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV11","name":"Seko Fofana","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV12","name":"Ibrahim Sangare","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV13","name":"Team Photo","team":"Ivory Coast","category":"team_photo","foil":false},{"code":"CIV14","name":"Jean-Philippe Gbamin","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV15","name":"Amad Diallo","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV16","name":"Sébastien Haller","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV17","name":"Simon Adingra","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV18","name":"Yan Diomande","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV19","name":"Evann Guessand","team":"Ivory Coast","category":"player","foil":false},{"code":"CIV20","name":"Oumar Diakite","team":"Ivory Coast","category":"player","foil":false},{"code":"ECU1","name":"Team Logo","team":"Ecuador","category":"badge","foil":true},{"code":"ECU2","name":"Hernán Galíndez","team":"Ecuador","category":"player","foil":false},{"code":"ECU3","name":"Gonzalo Valle","team":"Ecuador","category":"player","foil":false},{"code":"ECU4","name":"Piero Hincapié","team":"Ecuador","category":"player","foil":false},{"code":"ECU5","name":"Pervis Estupiñán","team":"Ecuador","category":"player","foil":false},{"code":"ECU6","name":"Willian Pacho","team":"Ecuador","category":"player","foil":false},{"code":"ECU7","name":"Ángelo Preciado","team":"Ecuador","category":"player","foil":false},{"code":"ECU8","name":"Joel Ordóñez","team":"Ecuador","category":"player","foil":false},{"code":"ECU9","name":"Moises Caicedo","team":"Ecuador","category":"player","foil":false},{"code":"ECU10","name":"Alan Franco","team":"Ecuador","category":"player","foil":false},{"code":"ECU11","name":"Kendry Paez","team":"Ecuador","category":"player","foil":false},{"code":"ECU12","name":"Pedro Vite","team":"Ecuador","category":"player","foil":false},{"code":"ECU13","name":"Team Photo","team":"Ecuador","category":"team_photo","foil":false},{"code":"ECU14","name":"John Yeboah","team":"Ecuador","category":"player","foil":false},{"code":"ECU15","name":"Leonardo Campana","team":"Ecuador","category":"player","foil":false},{"code":"ECU16","name":"Gonzalo Plata","team":"Ecuador","category":"player","foil":false},{"code":"ECU17","name":"Nilson Angulo","team":"Ecuador","category":"player","foil":false},{"code":"ECU18","name":"Alan Minda","team":"Ecuador","category":"player","foil":false},{"code":"ECU19","name":"Kevin Rodriguez","team":"Ecuador","category":"player","foil":false},{"code":"ECU20","name":"Enner Valencia","team":"Ecuador","category":"player","foil":false},{"code":"NED1","name":"Team Logo","team":"Netherlands","category":"badge","foil":true},{"code":"NED2","name":"Bart Verbruggen","team":"Netherlands","category":"player","foil":false},{"code":"NED3","name":"Virgil van Dijk","team":"Netherlands","category":"player","foil":false},{"code":"NED4","name":"Micky van de Ven","team":"Netherlands","category":"player","foil":false},{"code":"NED5","name":"Jurrien Timber","team":"Netherlands","category":"player","foil":false},{"code":"NED6","name":"Denzel Dumfries","team":"Netherlands","category":"player","foil":false},{"code":"NED7","name":"Nathan Aké","team":"Netherlands","category":"player","foil":false},{"code":"NED8","name":"Jeremie Frimpong","team":"Netherlands","category":"player","foil":false},{"code":"NED9","name":"Jan Paul van Hecke","team":"Netherlands","category":"player","foil":false},{"code":"NED10","name":"Tijjani Reijnders","team":"Netherlands","category":"player","foil":false},{"code":"NED11","name":"Ryan Gravenberch","team":"Netherlands","category":"player","foil":false},{"code":"NED12","name":"Teun Koopmeiners","team":"Netherlands","category":"player","foil":false},{"code":"NED13","name":"Team Photo","team":"Netherlands","category":"team_photo","foil":false},{"code":"NED14","name":"Frenkie de Jong","team":"Netherlands","category":"player","foil":false},{"code":"NED15","name":"Xavi Simons","team":"Netherlands","category":"player","foil":false},{"code":"NED16","name":"Justin Kluivert","team":"Netherlands","category":"player","foil":false},{"code":"NED17","name":"Memphis Depay","team":"Netherlands","category":"player","foil":false},{"code":"NED18","name":"Donyell Malen","team":"Netherlands","category":"player","foil":false},{"code":"NED19","name":"Wout Weghorst","team":"Netherlands","category":"player","foil":false},{"code":"NED20","name":"Cody Gakpo","team":"Netherlands","category":"player","foil":false},{"code":"JPN1","name":"Team Logo","team":"Japan","category":"badge","foil":true},{"code":"JPN2","name":"Zion Suzuki","team":"Japan","category":"player","foil":false},{"code":"JPN3","name":"Henry Heroki Mochizuki","team":"Japan","category":"player","foil":false},{"code":"JPN4","name":"Ayumu Seko","team":"Japan","category":"player","foil":false},{"code":"JPN5","name":"Junnosuke Suzuki","team":"Japan","category":"player","foil":false},{"code":"JPN6","name":"Shogo Taniguchi","team":"Japan","category":"player","foil":false},{"code":"JPN7","name":"Tsuyoshi Watanabe","team":"Japan","category":"player","foil":false},{"code":"JPN8","name":"Kaishu Sano","team":"Japan","category":"player","foil":false},{"code":"JPN9","name":"Yuki Soma","team":"Japan","category":"player","foil":false},{"code":"JPN10","name":"Ao Tanaka","team":"Japan","category":"player","foil":false},{"code":"JPN11","name":"Daichi Kamada","team":"Japan","category":"player","foil":false},{"code":"JPN12","name":"Takefusa Kubo","team":"Japan","category":"player","foil":false},{"code":"JPN13","name":"Team Photo","team":"Japan","category":"team_photo","foil":false},{"code":"JPN14","name":"Ritsu Doan","team":"Japan","category":"player","foil":false},{"code":"JPN15","name":"Keito Nakamura","team":"Japan","category":"player","foil":false},{"code":"JPN16","name":"Takumi Minamino","team":"Japan","category":"player","foil":false},{"code":"JPN17","name":"Shuto Machino","team":"Japan","category":"player","foil":false},{"code":"JPN18","name":"Junya Ito","team":"Japan","category":"player","foil":false},{"code":"JPN19","name":"Koki Ogawa","team":"Japan","category":"player","foil":false},{"code":"JPN20","name":"Ayase Ueda","team":"Japan","category":"player","foil":false},{"code":"SWE1","name":"Team Logo","team":"Sweden","category":"badge","foil":true},{"code":"SWE2","name":"Victor Johansson","team":"Sweden","category":"player","foil":false},{"code":"SWE3","name":"Isak Hien","team":"Sweden","category":"player","foil":false},{"code":"SWE4","name":"Gabriel Gudmundsson","team":"Sweden","category":"player","foil":false},{"code":"SWE5","name":"Emil Holm","team":"Sweden","category":"player","foil":false},{"code":"SWE6","name":"Victor Nilsson Lindelöf","team":"Sweden","category":"player","foil":false},{"code":"SWE7","name":"Gustaf Lagerbielke","team":"Sweden","category":"player","foil":false},{"code":"SWE8","name":"Lucas Bergvall","team":"Sweden","category":"player","foil":false},{"code":"SWE9","name":"Hugo Larsson","team":"Sweden","category":"player","foil":false},{"code":"SWE10","name":"Jesper Karlström","team":"Sweden","category":"player","foil":false},{"code":"SWE11","name":"Yasin Ayari","team":"Sweden","category":"player","foil":false},{"code":"SWE12","name":"Mattias Svanberg","team":"Sweden","category":"player","foil":false},{"code":"SWE13","name":"Team Photo","team":"Sweden","category":"team_photo","foil":false},{"code":"SWE14","name":"Daniel Svensson","team":"Sweden","category":"player","foil":false},{"code":"SWE15","name":"Ken Sema","team":"Sweden","category":"player","foil":false},{"code":"SWE16","name":"Roony Bardghji","team":"Sweden","category":"player","foil":false},{"code":"SWE17","name":"Dejan Kulusevski","team":"Sweden","category":"player","foil":false},{"code":"SWE18","name":"Anthony Elanga","team":"Sweden","category":"player","foil":false},{"code":"SWE19","name":"Alexander Isak","team":"Sweden","category":"player","foil":false},{"code":"SWE20","name":"Viktor Gyökeres","team":"Sweden","category":"player","foil":false},{"code":"TUN1","name":"Team Logo","team":"Tunisia","category":"badge","foil":true},{"code":"TUN2","name":"Bechir Ben Said","team":"Tunisia","category":"player","foil":false},{"code":"TUN3","name":"Aymen Dahmen","team":"Tunisia","category":"player","foil":false},{"code":"TUN4","name":"Yan Valery","team":"Tunisia","category":"player","foil":false},{"code":"TUN5","name":"Montassar Talbi","team":"Tunisia","category":"player","foil":false},{"code":"TUN6","name":"Yassine Meriah","team":"Tunisia","category":"player","foil":false},{"code":"TUN7","name":"Ali Abdi","team":"Tunisia","category":"player","foil":false},{"code":"TUN8","name":"Dylan Bronn","team":"Tunisia","category":"player","foil":false},{"code":"TUN9","name":"Ellyes Skhiri","team":"Tunisia","category":"player","foil":false},{"code":"TUN10","name":"Aissa Laidouni","team":"Tunisia","category":"player","foil":false},{"code":"TUN11","name":"Ferjani Sassi","team":"Tunisia","category":"player","foil":false},{"code":"TUN12","name":"Mohamed Ali Ben Romdhane","team":"Tunisia","category":"player","foil":false},{"code":"TUN13","name":"Team Photo","team":"Tunisia","category":"team_photo","foil":false},{"code":"TUN14","name":"Hannibal Mejbri","team":"Tunisia","category":"player","foil":false},{"code":"TUN15","name":"Elias Achouri","team":"Tunisia","category":"player","foil":false},{"code":"TUN16","name":"Elias Saad","team":"Tunisia","category":"player","foil":false},{"code":"TUN17","name":"Hazem Mastouri","team":"Tunisia","category":"player","foil":false},{"code":"TUN18","name":"Ismael Gharbi","team":"Tunisia","category":"player","foil":false},{"code":"TUN19","name":"Sayfallah Ltaief","team":"Tunisia","category":"player","foil":false},{"code":"TUN20","name":"Naim Sliti","team":"Tunisia","category":"player","foil":false},{"code":"BEL1","name":"Team Logo","team":"Belgium","category":"badge","foil":true},{"code":"BEL2","name":"Thibaut Courtois","team":"Belgium","category":"player","foil":false},{"code":"BEL3","name":"Arthur Theate","team":"Belgium","category":"player","foil":false},{"code":"BEL4","name":"Timothy Castagne","team":"Belgium","category":"player","foil":false},{"code":"BEL5","name":"Zeno Debast","team":"Belgium","category":"player","foil":false},{"code":"BEL6","name":"Brandon Mechele","team":"Belgium","category":"player","foil":false},{"code":"BEL7","name":"Maxim De Cuyper","team":"Belgium","category":"player","foil":false},{"code":"BEL8","name":"Thomas Meunier","team":"Belgium","category":"player","foil":false},{"code":"BEL9","name":"Youri Tielemans","team":"Belgium","category":"player","foil":false},{"code":"BEL10","name":"Amadou Onana","team":"Belgium","category":"player","foil":false},{"code":"BEL11","name":"Nicolas Raskin","team":"Belgium","category":"player","foil":false},{"code":"BEL12","name":"Alexis Saelemaekers","team":"Belgium","category":"player","foil":false},{"code":"BEL13","name":"Team Photo","team":"Belgium","category":"team_photo","foil":false},{"code":"BEL14","name":"Hans Vanaken","team":"Belgium","category":"player","foil":false},{"code":"BEL15","name":"Kevin De Bruyne","team":"Belgium","category":"player","foil":false},{"code":"BEL16","name":"Jérémy Doku","team":"Belgium","category":"player","foil":false},{"code":"BEL17","name":"Charles De Ketelaere","team":"Belgium","category":"player","foil":false},{"code":"BEL18","name":"Leandro Trossard","team":"Belgium","category":"player","foil":false},{"code":"BEL19","name":"Loïs Openda","team":"Belgium","category":"player","foil":false},{"code":"BEL20","name":"Romelu Lukaku","team":"Belgium","category":"player","foil":false},{"code":"EGY1","name":"Team Logo","team":"Egypt","category":"badge","foil":true},{"code":"EGY2","name":"Mohamed El Shenawy","team":"Egypt","category":"player","foil":false},{"code":"EGY3","name":"Mohamed Hany","team":"Egypt","category":"player","foil":false},{"code":"EGY4","name":"Mohamed Hamdy","team":"Egypt","category":"player","foil":false},{"code":"EGY5","name":"Yasser Ibrahim","team":"Egypt","category":"player","foil":false},{"code":"EGY6","name":"Khaled Sobhi","team":"Egypt","category":"player","foil":false},{"code":"EGY7","name":"Ramy Rabia","team":"Egypt","category":"player","foil":false},{"code":"EGY8","name":"Hossam Abdelmaguid","team":"Egypt","category":"player","foil":false},{"code":"EGY9","name":"Ahmed Fatouh","team":"Egypt","category":"player","foil":false},{"code":"EGY10","name":"Marwan Attia","team":"Egypt","category":"player","foil":false},{"code":"EGY11","name":"Zizo","team":"Egypt","category":"player","foil":false},{"code":"EGY12","name":"Hamdy Fathy","team":"Egypt","category":"player","foil":false},{"code":"EGY13","name":"Team Photo","team":"Egypt","category":"team_photo","foil":false},{"code":"EGY14","name":"Mohamed Lasheen","team":"Egypt","category":"player","foil":false},{"code":"EGY15","name":"Emam Ashour","team":"Egypt","category":"player","foil":false},{"code":"EGY16","name":"Osama Faisal","team":"Egypt","category":"player","foil":false},{"code":"EGY17","name":"Mohamed Salah","team":"Egypt","category":"player","foil":false},{"code":"EGY18","name":"Mostafa Mohamed","team":"Egypt","category":"player","foil":false},{"code":"EGY19","name":"Trezeguet","team":"Egypt","category":"player","foil":false},{"code":"EGY20","name":"Omar Marmoush","team":"Egypt","category":"player","foil":false},{"code":"IRN1","name":"Team Logo","team":"Iran","category":"badge","foil":true},{"code":"IRN2","name":"Alireza Beiranvand","team":"Iran","category":"player","foil":false},{"code":"IRN3","name":"Morteza Pouraliganji","team":"Iran","category":"player","foil":false},{"code":"IRN4","name":"Ehsan Hajsafi","team":"Iran","category":"player","foil":false},{"code":"IRN5","name":"Milad Mohammadi","team":"Iran","category":"player","foil":false},{"code":"IRN6","name":"Shojae Khalilzadeh","team":"Iran","category":"player","foil":false},{"code":"IRN7","name":"Ramin Rezaeian","team":"Iran","category":"player","foil":false},{"code":"IRN8","name":"Hossein Kanaani","team":"Iran","category":"player","foil":false},{"code":"IRN9","name":"Sadegh Moharrami","team":"Iran","category":"player","foil":false},{"code":"IRN10","name":"Saleh Hardani","team":"Iran","category":"player","foil":false},{"code":"IRN11","name":"Saeed Ezatolahi","team":"Iran","category":"player","foil":false},{"code":"IRN12","name":"Saman Ghoddos","team":"Iran","category":"player","foil":false},{"code":"IRN13","name":"Team Photo","team":"Iran","category":"team_photo","foil":false},{"code":"IRN14","name":"Omid Noorafkan","team":"Iran","category":"player","foil":false},{"code":"IRN15","name":"Roozbeh Cheshmi","team":"Iran","category":"player","foil":false},{"code":"IRN16","name":"Mohammad Mohebi","team":"Iran","category":"player","foil":false},{"code":"IRN17","name":"Sardar Azmoun","team":"Iran","category":"player","foil":false},{"code":"IRN18","name":"Mehdi Taremi","team":"Iran","category":"player","foil":false},{"code":"IRN19","name":"Alireza Jahanbakhsh","team":"Iran","category":"player","foil":false},{"code":"IRN20","name":"Ali Gholizadeh","team":"Iran","category":"player","foil":false},{"code":"NZL1","name":"Team Logo","team":"New Zealand","category":"badge","foil":true},{"code":"NZL2","name":"Max Crocombe Payne","team":"New Zealand","category":"player","foil":false},{"code":"NZL3","name":"Alex Paulsen","team":"New Zealand","category":"player","foil":false},{"code":"NZL4","name":"Michael Boxall","team":"New Zealand","category":"player","foil":false},{"code":"NZL5","name":"Liberato Cacace","team":"New Zealand","category":"player","foil":false},{"code":"NZL6","name":"Tim Payne","team":"New Zealand","category":"player","foil":false},{"code":"NZL7","name":"Tyler Bindon","team":"New Zealand","category":"player","foil":false},{"code":"NZL8","name":"Francis de Vries","team":"New Zealand","category":"player","foil":false},{"code":"NZL9","name":"Finn Surman","team":"New Zealand","category":"player","foil":false},{"code":"NZL10","name":"Joe Bell","team":"New Zealand","category":"player","foil":false},{"code":"NZL11","name":"Sarpreet Singh","team":"New Zealand","category":"player","foil":false},{"code":"NZL12","name":"Ryan Thomas","team":"New Zealand","category":"player","foil":false},{"code":"NZL13","name":"Team Photo","team":"New Zealand","category":"team_photo","foil":false},{"code":"NZL14","name":"Matthew Garbett","team":"New Zealand","category":"player","foil":false},{"code":"NZL15","name":"Marko Stamenić","team":"New Zealand","category":"player","foil":false},{"code":"NZL16","name":"Ben Old","team":"New Zealand","category":"player","foil":false},{"code":"NZL17","name":"Chris Wood","team":"New Zealand","category":"player","foil":false},{"code":"NZL18","name":"Elijah Just","team":"New Zealand","category":"player","foil":false},{"code":"NZL19","name":"Callum McCowatt","team":"New Zealand","category":"player","foil":false},{"code":"NZL20","name":"Kosta Barbarouses","team":"New Zealand","category":"player","foil":false},{"code":"ESP1","name":"Team Logo","team":"Spain","category":"badge","foil":true},{"code":"ESP2","name":"Unai Simon","team":"Spain","category":"player","foil":false},{"code":"ESP3","name":"Robin Le Normand","team":"Spain","category":"player","foil":false},{"code":"ESP4","name":"Aymeric Laporte","team":"Spain","category":"player","foil":false},{"code":"ESP5","name":"Dean Huijsen","team":"Spain","category":"player","foil":false},{"code":"ESP6","name":"Pedro Porro","team":"Spain","category":"player","foil":false},{"code":"ESP7","name":"Dani Carvajal","team":"Spain","category":"player","foil":false},{"code":"ESP8","name":"Marc Cucurella","team":"Spain","category":"player","foil":false},{"code":"ESP9","name":"Martín Zubimendi","team":"Spain","category":"player","foil":false},{"code":"ESP10","name":"Rodri","team":"Spain","category":"player","foil":false},{"code":"ESP11","name":"Pedri","team":"Spain","category":"player","foil":false},{"code":"ESP12","name":"Fabian Ruiz","team":"Spain","category":"player","foil":false},{"code":"ESP13","name":"Team Photo","team":"Spain","category":"team_photo","foil":false},{"code":"ESP14","name":"Mikel Merino","team":"Spain","category":"player","foil":false},{"code":"ESP15","name":"Lamine Yamal","team":"Spain","category":"player","foil":false},{"code":"ESP16","name":"Dani Olmo","team":"Spain","category":"player","foil":false},{"code":"ESP17","name":"Nico Williams","team":"Spain","category":"player","foil":false},{"code":"ESP18","name":"Ferran Torres","team":"Spain","category":"player","foil":false},{"code":"ESP19","name":"Álvaro Morata","team":"Spain","category":"player","foil":false},{"code":"ESP20","name":"Mikel Oyarzabal","team":"Spain","category":"player","foil":false},{"code":"CPV1","name":"Team Logo","team":"Cape Verde","category":"badge","foil":true},{"code":"CPV2","name":"Vozinha","team":"Cape Verde","category":"player","foil":false},{"code":"CPV3","name":"Logan Costa","team":"Cape Verde","category":"player","foil":false},{"code":"CPV4","name":"Pico","team":"Cape Verde","category":"player","foil":false},{"code":"CPV5","name":"Diney","team":"Cape Verde","category":"player","foil":false},{"code":"CPV6","name":"Steven Moreira","team":"Cape Verde","category":"player","foil":false},{"code":"CPV7","name":"Wagner Pina","team":"Cape Verde","category":"player","foil":false},{"code":"CPV8","name":"Joao Paulo","team":"Cape Verde","category":"player","foil":false},{"code":"CPV9","name":"Yannick Semedo","team":"Cape Verde","category":"player","foil":false},{"code":"CPV10","name":"Kevin Pina","team":"Cape Verde","category":"player","foil":false},{"code":"CPV11","name":"Patrick Andrade","team":"Cape Verde","category":"player","foil":false},{"code":"CPV12","name":"Jamiro Monteiro","team":"Cape Verde","category":"player","foil":false},{"code":"CPV13","name":"Team Photo","team":"Cape Verde","category":"team_photo","foil":false},{"code":"CPV14","name":"Deroy Duarte","team":"Cape Verde","category":"player","foil":false},{"code":"CPV15","name":"Garry Rodrigues","team":"Cape Verde","category":"player","foil":false},{"code":"CPV16","name":"Jovane Cabral","team":"Cape Verde","category":"player","foil":false},{"code":"CPV17","name":"Ryan Mendes","team":"Cape Verde","category":"player","foil":false},{"code":"CPV18","name":"Dailon Livramento","team":"Cape Verde","category":"player","foil":false},{"code":"CPV19","name":"Willy Semedo","team":"Cape Verde","category":"player","foil":false},{"code":"CPV20","name":"Bebe","team":"Cape Verde","category":"player","foil":false},{"code":"KSA1","name":"Team Logo","team":"Saudi Arabia","category":"badge","foil":true},{"code":"KSA2","name":"Nawaf Alaqidi","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA3","name":"Abdulrahman Al-Sanbi","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA4","name":"Saud Abdulhamid","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA5","name":"Nawaf Bouwashl","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA6","name":"Jihad Thakri","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA7","name":"Moteb Al-Harbi","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA8","name":"Hassan Altambakti","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA9","name":"Musab Aljuwayr","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA10","name":"Ziyad Aljohani","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA11","name":"Abdullah Alkhaibari","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA12","name":"Nasser Aldawsari","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA13","name":"Team Photo","team":"Saudi Arabia","category":"team_photo","foil":false},{"code":"KSA14","name":"Saleh Abu Alshamat","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA15","name":"Marwan Alsahafi","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA16","name":"Salem Aldawsari","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA17","name":"Abdulrahman Al-Aboud","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA18","name":"Feras Akbrikan","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA19","name":"Saleh Alshehri","team":"Saudi Arabia","category":"player","foil":false},{"code":"KSA20","name":"Abdullah Al-Hamdan","team":"Saudi Arabia","category":"player","foil":false},{"code":"URU1","name":"Team Logo","team":"Uruguay","category":"badge","foil":true},{"code":"URU2","name":"Sergio Rochet","team":"Uruguay","category":"player","foil":false},{"code":"URU3","name":"Santiago Mele","team":"Uruguay","category":"player","foil":false},{"code":"URU4","name":"Ronald Araujo","team":"Uruguay","category":"player","foil":false},{"code":"URU5","name":"José María Giménez","team":"Uruguay","category":"player","foil":false},{"code":"URU6","name":"Sebastian Caceres","team":"Uruguay","category":"player","foil":false},{"code":"URU7","name":"Mathias Olivera","team":"Uruguay","category":"player","foil":false},{"code":"URU8","name":"Guillermo Varela","team":"Uruguay","category":"player","foil":false},{"code":"URU9","name":"Nahitan Nandez","team":"Uruguay","category":"player","foil":false},{"code":"URU10","name":"Federico Valverde","team":"Uruguay","category":"player","foil":false},{"code":"URU11","name":"Giorgian De Arrascaeta","team":"Uruguay","category":"player","foil":false},{"code":"URU12","name":"Rodrigo Bentancur","team":"Uruguay","category":"player","foil":false},{"code":"URU13","name":"Team Photo","team":"Uruguay","category":"team_photo","foil":false},{"code":"URU14","name":"Manuel Ugarte","team":"Uruguay","category":"player","foil":false},{"code":"URU15","name":"Nicolás de la Cruz","team":"Uruguay","category":"player","foil":false},{"code":"URU16","name":"Maxi Araujo","team":"Uruguay","category":"player","foil":false},{"code":"URU17","name":"Darwin Núñez","team":"Uruguay","category":"player","foil":false},{"code":"URU18","name":"Federico Viñas","team":"Uruguay","category":"player","foil":false},{"code":"URU19","name":"Rodrigo Aguirre","team":"Uruguay","category":"player","foil":false},{"code":"URU20","name":"Facundo Pellistri","team":"Uruguay","category":"player","foil":false},{"code":"FRA1","name":"Team Logo","team":"France","category":"badge","foil":true},{"code":"FRA2","name":"Mike Maignan","team":"France","category":"player","foil":false},{"code":"FRA3","name":"Theo Hernandez","team":"France","category":"player","foil":false},{"code":"FRA4","name":"William Saliba","team":"France","category":"player","foil":false},{"code":"FRA5","name":"Jules Kounde","team":"France","category":"player","foil":false},{"code":"FRA6","name":"Ibrahima Konate","team":"France","category":"player","foil":false},{"code":"FRA7","name":"Dayot Upamecano","team":"France","category":"player","foil":false},{"code":"FRA8","name":"Lucas Digne","team":"France","category":"player","foil":false},{"code":"FRA9","name":"Aurélien Tchouaméni","team":"France","category":"player","foil":false},{"code":"FRA10","name":"Eduardo Camavinga","team":"France","category":"player","foil":false},{"code":"FRA11","name":"Manu Kone","team":"France","category":"player","foil":false},{"code":"FRA12","name":"Adrien Rabiot","team":"France","category":"player","foil":false},{"code":"FRA13","name":"Team Photo","team":"France","category":"team_photo","foil":false},{"code":"FRA14","name":"Michael Olise","team":"France","category":"player","foil":false},{"code":"FRA15","name":"Ousmane Dembele","team":"France","category":"player","foil":false},{"code":"FRA16","name":"Bradley Barcola","team":"France","category":"player","foil":false},{"code":"FRA17","name":"Désiré Doué","team":"France","category":"player","foil":false},{"code":"FRA18","name":"Kingsley Coman","team":"France","category":"player","foil":false},{"code":"FRA19","name":"Hugo Ekitike","team":"France","category":"player","foil":false},{"code":"FRA20","name":"Kylian Mbappe","team":"France","category":"player","foil":false},{"code":"SEN1","name":"Team Logo","team":"Senegal","category":"badge","foil":true},{"code":"SEN2","name":"Edouard Mendy","team":"Senegal","category":"player","foil":false},{"code":"SEN3","name":"Yehvann Diouf","team":"Senegal","category":"player","foil":false},{"code":"SEN4","name":"Moussa Niakhaté","team":"Senegal","category":"player","foil":false},{"code":"SEN5","name":"Abdoulaye Seck","team":"Senegal","category":"player","foil":false},{"code":"SEN6","name":"Ismail Jakobs","team":"Senegal","category":"player","foil":false},{"code":"SEN7","name":"El Hadji Malick Diouf","team":"Senegal","category":"player","foil":false},{"code":"SEN8","name":"Kalidou Koulibaly","team":"Senegal","category":"player","foil":false},{"code":"SEN9","name":"Idrissa Gana Gueye","team":"Senegal","category":"player","foil":false},{"code":"SEN10","name":"Pape Matar Sarr","team":"Senegal","category":"player","foil":false},{"code":"SEN11","name":"Pape Gueye","team":"Senegal","category":"player","foil":false},{"code":"SEN12","name":"Habib Diarra","team":"Senegal","category":"player","foil":false},{"code":"SEN13","name":"Team Photo","team":"Senegal","category":"team_photo","foil":false},{"code":"SEN14","name":"Lamine Camara","team":"Senegal","category":"player","foil":false},{"code":"SEN15","name":"Sadio Mane","team":"Senegal","category":"player","foil":false},{"code":"SEN16","name":"Ismaïla Sarr","team":"Senegal","category":"player","foil":false},{"code":"SEN17","name":"Boulaye Dia","team":"Senegal","category":"player","foil":false},{"code":"SEN18","name":"Iliman Ndiaye","team":"Senegal","category":"player","foil":false},{"code":"SEN19","name":"Nicolas Jackson","team":"Senegal","category":"player","foil":false},{"code":"SEN20","name":"Krepin Diatta","team":"Senegal","category":"player","foil":false},{"code":"IRQ1","name":"Team Logo","team":"Iraq","category":"badge","foil":true},{"code":"IRQ2","name":"Jalal Hassan","team":"Iraq","category":"player","foil":false},{"code":"IRQ3","name":"Rebin Sulaka","team":"Iraq","category":"player","foil":false},{"code":"IRQ4","name":"Hussein Ali","team":"Iraq","category":"player","foil":false},{"code":"IRQ5","name":"Akam Hashem","team":"Iraq","category":"player","foil":false},{"code":"IRQ6","name":"Merchas Doski","team":"Iraq","category":"player","foil":false},{"code":"IRQ7","name":"Zaid Tahseen","team":"Iraq","category":"player","foil":false},{"code":"IRQ8","name":"Manaf Younis","team":"Iraq","category":"player","foil":false},{"code":"IRQ9","name":"Zidane Iqbal","team":"Iraq","category":"player","foil":false},{"code":"IRQ10","name":"Amir Al-Ammari","team":"Iraq","category":"player","foil":false},{"code":"IRQ11","name":"Ibrahim Bavesh","team":"Iraq","category":"player","foil":false},{"code":"IRQ12","name":"Ali Jasim","team":"Iraq","category":"player","foil":false},{"code":"IRQ13","name":"Team Photo","team":"Iraq","category":"team_photo","foil":false},{"code":"IRQ14","name":"Youssef Amyn","team":"Iraq","category":"player","foil":false},{"code":"IRQ15","name":"Aimar Sher","team":"Iraq","category":"player","foil":false},{"code":"IRQ16","name":"Marko Farji","team":"Iraq","category":"player","foil":false},{"code":"IRQ17","name":"Osama Rashid","team":"Iraq","category":"player","foil":false},{"code":"IRQ18","name":"Ali Al-Hamadi","team":"Iraq","category":"player","foil":false},{"code":"IRQ19","name":"Aymen Hussein","team":"Iraq","category":"player","foil":false},{"code":"IRQ20","name":"Mohanad Ali","team":"Iraq","category":"player","foil":false},{"code":"NOR1","name":"Team Logo","team":"Norway","category":"badge","foil":true},{"code":"NOR2","name":"Orjan Nyland","team":"Norway","category":"player","foil":false},{"code":"NOR3","name":"Julian Ryerson","team":"Norway","category":"player","foil":false},{"code":"NOR4","name":"Leo Ostigård","team":"Norway","category":"player","foil":false},{"code":"NOR5","name":"Kristoffer Vassbakk Ajer","team":"Norway","category":"player","foil":false},{"code":"NOR6","name":"Marcus Holmgren Pedersen","team":"Norway","category":"player","foil":false},{"code":"NOR7","name":"David Møller Wolfe","team":"Norway","category":"player","foil":false},{"code":"NOR8","name":"Torbjørn Heggem","team":"Norway","category":"player","foil":false},{"code":"NOR9","name":"Morten Thorsby","team":"Norway","category":"player","foil":false},{"code":"NOR10","name":"Martin Ødegaard","team":"Norway","category":"player","foil":false},{"code":"NOR11","name":"Sander Berge","team":"Norway","category":"player","foil":false},{"code":"NOR12","name":"Andreas Schjelderup","team":"Norway","category":"player","foil":false},{"code":"NOR13","name":"Team Photo","team":"Norway","category":"team_photo","foil":false},{"code":"NOR14","name":"Patrick Berg","team":"Norway","category":"player","foil":false},{"code":"NOR15","name":"Erling Haaland","team":"Norway","category":"player","foil":false},{"code":"NOR16","name":"Alexander Sørloth","team":"Norway","category":"player","foil":false},{"code":"NOR17","name":"Aron Dønnum","team":"Norway","category":"player","foil":false},{"code":"NOR18","name":"Jorgen Strand Larsen","team":"Norway","category":"player","foil":false},{"code":"NOR19","name":"Antonio Nusa","team":"Norway","category":"player","foil":false},{"code":"NOR20","name":"Oscar Bobb","team":"Norway","category":"player","foil":false},{"code":"ARG1","name":"Team Logo","team":"Argentina","category":"badge","foil":true},{"code":"ARG2","name":"Emiliano Martinez","team":"Argentina","category":"player","foil":false},{"code":"ARG3","name":"Nahuel Molina","team":"Argentina","category":"player","foil":false},{"code":"ARG4","name":"Cristian Romero","team":"Argentina","category":"player","foil":false},{"code":"ARG5","name":"Nicolas Otamendi","team":"Argentina","category":"player","foil":false},{"code":"ARG6","name":"Nicolas Tagliafico","team":"Argentina","category":"player","foil":false},{"code":"ARG7","name":"Leonardo Balerdi","team":"Argentina","category":"player","foil":false},{"code":"ARG8","name":"Enzo Fernandez","team":"Argentina","category":"player","foil":false},{"code":"ARG9","name":"Alexis Mac Allister","team":"Argentina","category":"player","foil":false},{"code":"ARG10","name":"Rodrigo De Paul","team":"Argentina","category":"player","foil":false},{"code":"ARG11","name":"Exequiel Palacios","team":"Argentina","category":"player","foil":false},{"code":"ARG12","name":"Leandro Paredes","team":"Argentina","category":"player","foil":false},{"code":"ARG13","name":"Team Photo","team":"Argentina","category":"team_photo","foil":false},{"code":"ARG14","name":"Nico Paz","team":"Argentina","category":"player","foil":false},{"code":"ARG15","name":"Franco Mastantuono","team":"Argentina","category":"player","foil":false},{"code":"ARG16","name":"Nico Gonzalez","team":"Argentina","category":"player","foil":false},{"code":"ARG17","name":"Lionel Messi","team":"Argentina","category":"player","foil":false},{"code":"ARG18","name":"Lautaro Martinez","team":"Argentina","category":"player","foil":false},{"code":"ARG19","name":"Julian Alvarez","team":"Argentina","category":"player","foil":false},{"code":"ARG20","name":"Giuliano Simeone","team":"Argentina","category":"player","foil":false},{"code":"ALG1","name":"Team Logo","team":"Algeria","category":"badge","foil":true},{"code":"ALG2","name":"Alexis Guendouz","team":"Algeria","category":"player","foil":false},{"code":"ALG3","name":"Ramy Bensebaini","team":"Algeria","category":"player","foil":false},{"code":"ALG4","name":"Youcef Atal","team":"Algeria","category":"player","foil":false},{"code":"ALG5","name":"Rayan Aït-Nouri","team":"Algeria","category":"player","foil":false},{"code":"ALG6","name":"Mohamed Amine Tougai","team":"Algeria","category":"player","foil":false},{"code":"ALG7","name":"Aïssa Mandi","team":"Algeria","category":"player","foil":false},{"code":"ALG8","name":"Ismael Bennacer","team":"Algeria","category":"player","foil":false},{"code":"ALG9","name":"Houssem Aouar","team":"Algeria","category":"player","foil":false},{"code":"ALG10","name":"Hicham Boudaoui","team":"Algeria","category":"player","foil":false},{"code":"ALG11","name":"Ramiz Zerrouki","team":"Algeria","category":"player","foil":false},{"code":"ALG12","name":"Nabil Bentaleb","team":"Algeria","category":"player","foil":false},{"code":"ALG13","name":"Team Photo","team":"Algeria","category":"team_photo","foil":false},{"code":"ALG14","name":"Farés Chaibi","team":"Algeria","category":"player","foil":false},{"code":"ALG15","name":"Riyad Mahrez","team":"Algeria","category":"player","foil":false},{"code":"ALG16","name":"Said Benrahma","team":"Algeria","category":"player","foil":false},{"code":"ALG17","name":"Anis Hadj Moussa","team":"Algeria","category":"player","foil":false},{"code":"ALG18","name":"Amine Gouiri","team":"Algeria","category":"player","foil":false},{"code":"ALG19","name":"Baghdad Bounedjah","team":"Algeria","category":"player","foil":false},{"code":"ALG20","name":"Mohammed Amoura","team":"Algeria","category":"player","foil":false},{"code":"AUT1","name":"Team Logo","team":"Austria","category":"badge","foil":true},{"code":"AUT2","name":"Alexander Schlager","team":"Austria","category":"player","foil":false},{"code":"AUT3","name":"Patrick Pentz","team":"Austria","category":"player","foil":false},{"code":"AUT4","name":"David Alaba","team":"Austria","category":"player","foil":false},{"code":"AUT5","name":"Kevin Danso","team":"Austria","category":"player","foil":false},{"code":"AUT6","name":"Philipp Lienhart","team":"Austria","category":"player","foil":false},{"code":"AUT7","name":"Stefan Posch","team":"Austria","category":"player","foil":false},{"code":"AUT8","name":"Phillipp Mwene","team":"Austria","category":"player","foil":false},{"code":"AUT9","name":"Alexander Prass","team":"Austria","category":"player","foil":false},{"code":"AUT10","name":"Xaver Schlager","team":"Austria","category":"player","foil":false},{"code":"AUT11","name":"Marcel Sabitzer","team":"Austria","category":"player","foil":false},{"code":"AUT12","name":"Konrad Laimer","team":"Austria","category":"player","foil":false},{"code":"AUT13","name":"Team Photo","team":"Austria","category":"team_photo","foil":false},{"code":"AUT14","name":"Florian Grillitsch","team":"Austria","category":"player","foil":false},{"code":"AUT15","name":"Nicolas Seiwald","team":"Austria","category":"player","foil":false},{"code":"AUT16","name":"Romano Schmid","team":"Austria","category":"player","foil":false},{"code":"AUT17","name":"Patrick Wimmer","team":"Austria","category":"player","foil":false},{"code":"AUT18","name":"Christoph Baumgartner","team":"Austria","category":"player","foil":false},{"code":"AUT19","name":"Michael Gregoritsch","team":"Austria","category":"player","foil":false},{"code":"AUT20","name":"Marko Arnautović","team":"Austria","category":"player","foil":false},{"code":"JOR1","name":"Team Logo","team":"Jordan","category":"badge","foil":true},{"code":"JOR2","name":"Yazeed Abulaila","team":"Jordan","category":"player","foil":false},{"code":"JOR3","name":"Ihsan Haddad","team":"Jordan","category":"player","foil":false},{"code":"JOR4","name":"Mohammad Abu Hashish","team":"Jordan","category":"player","foil":false},{"code":"JOR5","name":"Yazan Al-Arab","team":"Jordan","category":"player","foil":false},{"code":"JOR6","name":"Abdallah Nasib","team":"Jordan","category":"player","foil":false},{"code":"JOR7","name":"Saleem Obaid","team":"Jordan","category":"player","foil":false},{"code":"JOR8","name":"Mohammad Abualnadi","team":"Jordan","category":"player","foil":false},{"code":"JOR9","name":"Ibrahim Saadeh","team":"Jordan","category":"player","foil":false},{"code":"JOR10","name":"Nizar Al-Rashdan","team":"Jordan","category":"player","foil":false},{"code":"JOR11","name":"Noor Al-Rawabdeh","team":"Jordan","category":"player","foil":false},{"code":"JOR12","name":"Mohannad Abu Taha","team":"Jordan","category":"player","foil":false},{"code":"JOR13","name":"Team Photo","team":"Jordan","category":"team_photo","foil":false},{"code":"JOR14","name":"Amer Jamous","team":"Jordan","category":"player","foil":false},{"code":"JOR15","name":"Musa Al-Taamari","team":"Jordan","category":"player","foil":false},{"code":"JOR16","name":"Yazan Al-Naimat","team":"Jordan","category":"player","foil":false},{"code":"JOR17","name":"Mahmoud Al-Mardi","team":"Jordan","category":"player","foil":false},{"code":"JOR18","name":"Ali Olwan","team":"Jordan","category":"player","foil":false},{"code":"JOR19","name":"Mohammad Abu Zrayq","team":"Jordan","category":"player","foil":false},{"code":"JOR20","name":"Ibrahim Sabra","team":"Jordan","category":"player","foil":false},{"code":"POR1","name":"Team Logo","team":"Portugal","category":"badge","foil":true},{"code":"POR2","name":"Diogo Costa","team":"Portugal","category":"player","foil":false},{"code":"POR3","name":"Jose Sa","team":"Portugal","category":"player","foil":false},{"code":"POR4","name":"Ruben Dias","team":"Portugal","category":"player","foil":false},{"code":"POR5","name":"João Cancelo","team":"Portugal","category":"player","foil":false},{"code":"POR6","name":"Diogo Dalot","team":"Portugal","category":"player","foil":false},{"code":"POR7","name":"Nuno Mendes","team":"Portugal","category":"player","foil":false},{"code":"POR8","name":"Gonçalo Inácio","team":"Portugal","category":"player","foil":false},{"code":"POR9","name":"Bernardo Silva","team":"Portugal","category":"player","foil":false},{"code":"POR10","name":"Bruno Fernandes","team":"Portugal","category":"player","foil":false},{"code":"POR11","name":"Ruben Neves","team":"Portugal","category":"player","foil":false},{"code":"POR12","name":"Vitinha","team":"Portugal","category":"player","foil":false},{"code":"POR13","name":"Team Photo","team":"Portugal","category":"team_photo","foil":false},{"code":"POR14","name":"João Neves","team":"Portugal","category":"player","foil":false},{"code":"POR15","name":"Cristiano Ronaldo","team":"Portugal","category":"player","foil":false},{"code":"POR16","name":"Francisco Trincao","team":"Portugal","category":"player","foil":false},{"code":"POR17","name":"João Felix","team":"Portugal","category":"player","foil":false},{"code":"POR18","name":"Gonçalo Ramos","team":"Portugal","category":"player","foil":false},{"code":"POR19","name":"Pedro Neto","team":"Portugal","category":"player","foil":false},{"code":"POR20","name":"Rafael Leão","team":"Portugal","category":"player","foil":false},{"code":"COD1","name":"Team Logo","team":"Congo DR","category":"badge","foil":true},{"code":"COD2","name":"Lionel Mpasi","team":"Congo DR","category":"player","foil":false},{"code":"COD3","name":"Aaron Wan-Bissaka","team":"Congo DR","category":"player","foil":false},{"code":"COD4","name":"Axel Tuanzebe","team":"Congo DR","category":"player","foil":false},{"code":"COD5","name":"Arthur Masuaku","team":"Congo DR","category":"player","foil":false},{"code":"COD6","name":"Chancel Mbemba","team":"Congo DR","category":"player","foil":false},{"code":"COD7","name":"Joris Kayembe","team":"Congo DR","category":"player","foil":false},{"code":"COD8","name":"Charles Pickel","team":"Congo DR","category":"player","foil":false},{"code":"COD9","name":"Ngal'ayel Mukau","team":"Congo DR","category":"player","foil":false},{"code":"COD10","name":"Edo Kayembe","team":"Congo DR","category":"player","foil":false},{"code":"COD11","name":"Samuel Moutoussamy","team":"Congo DR","category":"player","foil":false},{"code":"COD12","name":"Noah Sadiki","team":"Congo DR","category":"player","foil":false},{"code":"COD13","name":"Team Photo","team":"Congo DR","category":"team_photo","foil":false},{"code":"COD14","name":"Théo Bongonda","team":"Congo DR","category":"player","foil":false},{"code":"COD15","name":"Meschak Elia","team":"Congo DR","category":"player","foil":false},{"code":"COD16","name":"Yoane Wissa","team":"Congo DR","category":"player","foil":false},{"code":"COD17","name":"Brian Cipenga","team":"Congo DR","category":"player","foil":false},{"code":"COD18","name":"Fiston Mayele","team":"Congo DR","category":"player","foil":false},{"code":"COD19","name":"Cédric Bakambu","team":"Congo DR","category":"player","foil":false},{"code":"COD20","name":"Nathanaël Mbuku","team":"Congo DR","category":"player","foil":false},{"code":"UZB1","name":"Team Logo","team":"Uzbekistan","category":"badge","foil":true},{"code":"UZB2","name":"Utkir Yusupov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB3","name":"Farrukh Sayfiev","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB4","name":"Sherzod Nasrullaev","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB5","name":"Umar Eshmurodov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB6","name":"Husniddin Aliqulov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB7","name":"Rustamjon Ashurmatov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB8","name":"Khojiakbar Alijonov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB9","name":"Abdukodir Khusanov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB10","name":"Odiljon Hamrobekov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB11","name":"Otabek Shukurov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB12","name":"Jamshid Iskanderov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB13","name":"Team Photo","team":"Uzbekistan","category":"team_photo","foil":false},{"code":"UZB14","name":"Azizbek Turgunboev","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB15","name":"Khojimat Erkinov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB16","name":"Eldor Shomurodov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB17","name":"Oston Urunov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB18","name":"Jaloliddin Masharipov","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB19","name":"Igor Sergeev","team":"Uzbekistan","category":"player","foil":false},{"code":"UZB20","name":"Abbosbek Fayzullaev","team":"Uzbekistan","category":"player","foil":false},{"code":"COL1","name":"Team Logo","team":"Colombia","category":"badge","foil":true},{"code":"COL2","name":"Camilo Vargas","team":"Colombia","category":"player","foil":false},{"code":"COL3","name":"David Ospina","team":"Colombia","category":"player","foil":false},{"code":"COL4","name":"Dávinson Sánchez","team":"Colombia","category":"player","foil":false},{"code":"COL5","name":"Yerry Mina","team":"Colombia","category":"player","foil":false},{"code":"COL6","name":"Daniel Munoz","team":"Colombia","category":"player","foil":false},{"code":"COL7","name":"Johan Mojica","team":"Colombia","category":"player","foil":false},{"code":"COL8","name":"Jhon Lucumí","team":"Colombia","category":"player","foil":false},{"code":"COL9","name":"Santiago Arias","team":"Colombia","category":"player","foil":false},{"code":"COL10","name":"Jefferson Lerma","team":"Colombia","category":"player","foil":false},{"code":"COL11","name":"Kevin Castaño","team":"Colombia","category":"player","foil":false},{"code":"COL12","name":"Richard Rios","team":"Colombia","category":"player","foil":false},{"code":"COL13","name":"Team Photo","team":"Colombia","category":"team_photo","foil":false},{"code":"COL14","name":"James Rodriguez","team":"Colombia","category":"player","foil":false},{"code":"COL15","name":"Juan Fernando Quintero","team":"Colombia","category":"player","foil":false},{"code":"COL16","name":"Jorge Carrascal","team":"Colombia","category":"player","foil":false},{"code":"COL17","name":"Jhon Arias","team":"Colombia","category":"player","foil":false},{"code":"COL18","name":"Jhon Cordova","team":"Colombia","category":"player","foil":false},{"code":"COL19","name":"Luis Suarez","team":"Colombia","category":"player","foil":false},{"code":"COL20","name":"Luis Diaz","team":"Colombia","category":"player","foil":false},{"code":"ENG1","name":"Team Logo","team":"England","category":"badge","foil":true},{"code":"ENG2","name":"Jordan Pickford","team":"England","category":"player","foil":false},{"code":"ENG3","name":"John Stones","team":"England","category":"player","foil":false},{"code":"ENG4","name":"Marc Guéhi","team":"England","category":"player","foil":false},{"code":"ENG5","name":"Ezri Konsa","team":"England","category":"player","foil":false},{"code":"ENG6","name":"Trent Alexander-Arnold","team":"England","category":"player","foil":false},{"code":"ENG7","name":"Reece James","team":"England","category":"player","foil":false},{"code":"ENG8","name":"Dan Burn","team":"England","category":"player","foil":false},{"code":"ENG9","name":"Jordan Henderson","team":"England","category":"player","foil":false},{"code":"ENG10","name":"Declan Rice","team":"England","category":"player","foil":false},{"code":"ENG11","name":"Jude Bellingham","team":"England","category":"player","foil":false},{"code":"ENG12","name":"Cole Palmer","team":"England","category":"player","foil":false},{"code":"ENG13","name":"Team Photo","team":"England","category":"team_photo","foil":false},{"code":"ENG14","name":"Morgan Rogers","team":"England","category":"player","foil":false},{"code":"ENG15","name":"Anthony Gordon","team":"England","category":"player","foil":false},{"code":"ENG16","name":"Phil Foden","team":"England","category":"player","foil":false},{"code":"ENG17","name":"Bukayo Saka","team":"England","category":"player","foil":false},{"code":"ENG18","name":"Harry Kane","team":"England","category":"player","foil":false},{"code":"ENG19","name":"Marcus Rashford","team":"England","category":"player","foil":false},{"code":"ENG20","name":"Ollie Watkins","team":"England","category":"player","foil":false},{"code":"CRO1","name":"Team Logo","team":"Croatia","category":"badge","foil":true},{"code":"CRO2","name":"Dominik Livaković","team":"Croatia","category":"player","foil":false},{"code":"CRO3","name":"Duje Caleta-Car","team":"Croatia","category":"player","foil":false},{"code":"CRO4","name":"Josko Gvardiol","team":"Croatia","category":"player","foil":false},{"code":"CRO5","name":"Josip Stanišić","team":"Croatia","category":"player","foil":false},{"code":"CRO6","name":"Luka Vušković","team":"Croatia","category":"player","foil":false},{"code":"CRO7","name":"Josip Sutalo","team":"Croatia","category":"player","foil":false},{"code":"CRO8","name":"Kristijan Jakic","team":"Croatia","category":"player","foil":false},{"code":"CRO9","name":"Luka Modrić","team":"Croatia","category":"player","foil":false},{"code":"CRO10","name":"Mateo Kovacic","team":"Croatia","category":"player","foil":false},{"code":"CRO11","name":"Martin Baturina","team":"Croatia","category":"player","foil":false},{"code":"CRO12","name":"Lovro Majer","team":"Croatia","category":"player","foil":false},{"code":"CRO13","name":"Team Photo","team":"Croatia","category":"team_photo","foil":false},{"code":"CRO14","name":"Mario Pasalic","team":"Croatia","category":"player","foil":false},{"code":"CRO15","name":"Petar Sucic","team":"Croatia","category":"player","foil":false},{"code":"CRO16","name":"Ivan Perišić","team":"Croatia","category":"player","foil":false},{"code":"CRO17","name":"Marco Pasalic","team":"Croatia","category":"player","foil":false},{"code":"CRO18","name":"Ante Budimir","team":"Croatia","category":"player","foil":false},{"code":"CRO19","name":"Andrej Kramarić","team":"Croatia","category":"player","foil":false},{"code":"CRO20","name":"Franjo Ivanovic","team":"Croatia","category":"player","foil":false},{"code":"GHA1","name":"Team Logo","team":"Ghana","category":"badge","foil":true},{"code":"GHA2","name":"Lawrence Ati Zigi","team":"Ghana","category":"player","foil":false},{"code":"GHA3","name":"Tariq Lamptey","team":"Ghana","category":"player","foil":false},{"code":"GHA4","name":"Mohammed Salisu","team":"Ghana","category":"player","foil":false},{"code":"GHA5","name":"Alidu Seidu","team":"Ghana","category":"player","foil":false},{"code":"GHA6","name":"Alexander Djiku","team":"Ghana","category":"player","foil":false},{"code":"GHA7","name":"Gideon Mensah","team":"Ghana","category":"player","foil":false},{"code":"GHA8","name":"Caleb Yirenkyi","team":"Ghana","category":"player","foil":false},{"code":"GHA9","name":"Abdul Issahaku Fatawu","team":"Ghana","category":"player","foil":false},{"code":"GHA10","name":"Thomas Partey","team":"Ghana","category":"player","foil":false},{"code":"GHA11","name":"Salis Abdul Samed","team":"Ghana","category":"player","foil":false},{"code":"GHA12","name":"Kamaldeen Sulemana","team":"Ghana","category":"player","foil":false},{"code":"GHA13","name":"Team Photo","team":"Ghana","category":"team_photo","foil":false},{"code":"GHA14","name":"Mohammed Kudus","team":"Ghana","category":"player","foil":false},{"code":"GHA15","name":"Inaki Williams","team":"Ghana","category":"player","foil":false},{"code":"GHA16","name":"Jordan Ayew","team":"Ghana","category":"player","foil":false},{"code":"GHA17","name":"Andrew Ayew","team":"Ghana","category":"player","foil":false},{"code":"GHA18","name":"Joseph Paintsil","team":"Ghana","category":"player","foil":false},{"code":"GHA19","name":"Osman Bukari","team":"Ghana","category":"player","foil":false},{"code":"GHA20","name":"Antoine Semenyo","team":"Ghana","category":"player","foil":false},{"code":"PAN1","name":"Team Logo","team":"Panama","category":"badge","foil":true},{"code":"PAN2","name":"Orlando Mosquera","team":"Panama","category":"player","foil":false},{"code":"PAN3","name":"Luis Mejia","team":"Panama","category":"player","foil":false},{"code":"PAN4","name":"Fidel Escobar","team":"Panama","category":"player","foil":false},{"code":"PAN5","name":"Andres Andrade","team":"Panama","category":"player","foil":false},{"code":"PAN6","name":"Michael Amir Murillo","team":"Panama","category":"player","foil":false},{"code":"PAN7","name":"Eric Davis","team":"Panama","category":"player","foil":false},{"code":"PAN8","name":"Jose Cordoba","team":"Panama","category":"player","foil":false},{"code":"PAN9","name":"Cesar Blackman","team":"Panama","category":"player","foil":false},{"code":"PAN10","name":"Cristian Martinez","team":"Panama","category":"player","foil":false},{"code":"PAN11","name":"Aníbal Godoy","team":"Panama","category":"player","foil":false},{"code":"PAN12","name":"Adalberto Carrasquilla","team":"Panama","category":"player","foil":false},{"code":"PAN13","name":"Team Photo","team":"Panama","category":"team_photo","foil":false},{"code":"PAN14","name":"Édgar Bárcenas","team":"Panama","category":"player","foil":false},{"code":"PAN15","name":"Carlos Harvey","team":"Panama","category":"player","foil":false},{"code":"PAN16","name":"Ismael Díaz","team":"Panama","category":"player","foil":false},{"code":"PAN17","name":"Jose Fajardo","team":"Panama","category":"player","foil":false},{"code":"PAN18","name":"Cecilio Waterman","team":"Panama","category":"player","foil":false},{"code":"PAN19","name":"Jose Luiz Rodriguez","team":"Panama","category":"player","foil":false},{"code":"PAN20","name":"Alberto Quintero","team":"Panama","category":"player","foil":false},{"code":"FWC9","name":"Italy 1934","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC10","name":"Uruguay 1950","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC11","name":"West Germany 1954","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC12","name":"Brazil 1962","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC13","name":"West Germany 1974","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC14","name":"Argentina 1986","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC15","name":"Brazil 1994","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC16","name":"Brazil 2002","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC17","name":"Italy 2006","team":"FIFA Museum","category":"museum","foil":true},{"code":"FWC18","name":"Germany 2014","team":"FIFA Museum","category":"museum","foil":true}];
+const TOTAL = STICKERS.length;
+const SMAP = {};
+STICKERS.forEach(s => { SMAP[s.code] = s; });
+
+// ============================================================
+// STATE
+// ============================================================
+let owned = {};
+let lastUpdated = null;
+let curFilter = 'all';
+let curCode = null;
+let dblMode = false;
+let queue = [];
+let ocrCodes = [];
+
+// ============================================================
+// GITHUB
+// ============================================================
+async function loadFromGitHub() {
+  const btn = document.getElementById('refreshBtn');
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const res = await fetch(GITHUB_RAW_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const d = await res.json();
+    owned = d.owned || {};
+    lastUpdated = d.lastUpdated || null;
+    updLastUpd();
+    renderAll();
+    toast('&#10003; Aktualisiert von GitHub', 'ok');
+  } catch(e) {
+    toast('&#9888; Laden fehlgeschlagen: ' + e.message, 'err');
+  } finally {
+    btn.innerHTML = '<i data-lucide="refresh-cw" style="width:16px;height:16px;"></i>';
+    lucide.createIcons();
+  }
+}
+
+async function saveData() {
+  const state = { owned, lastUpdated: new Date().toISOString() };
+  if (!GITHUB_TOKEN) {
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'sticker-state.json';
+    a.click();
+    toast('&#128229; JSON heruntergeladen (kein Token gesetzt)');
+    return;
+  }
+  try {
+    toast('Speichern&#8230;');
+    const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/sticker-state.json`;
+    let sha = null;
+    try {
+      const ex = await fetch(apiUrl, {headers:{Authorization:'Bearer '+GITHUB_TOKEN}});
+      if (ex.ok) { const d = await ex.json(); sha = d.sha; }
+    } catch(_) {}
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
+    const body = { message:`Update sticker list [${new Date().toISOString()}]`, content, branch:GITHUB_BRANCH };
+    if (sha) body.sha = sha;
+    const res = await fetch(apiUrl, {
+      method:'PUT',
+      headers:{Authorization:'Bearer '+GITHUB_TOKEN,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message||res.status); }
+    lastUpdated = state.lastUpdated;
+    updLastUpd();
+    toast('&#10003; Gespeichert auf GitHub', 'ok');
+  } catch(e) {
+    toast('&#10007; Fehler: ' + e.message, 'err');
+  }
+}
+
+function updLastUpd() {
+  const el = document.getElementById('lastUpd');
+  if (lastUpdated) {
+    const d = new Date(lastUpdated);
+    el.textContent = 'Zuletzt: ' + d.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'});
+  } else el.textContent = '–';
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('#sideNav button, #botNav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#sideNav button, #botNav button').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+name+"'")) b.classList.add('active');
+  });
+  if (name==='collection') renderColl();
+  else if (name==='missing') renderMissing();
+  else if (name==='doubles') renderDoubles();
+  else if (name==='home') renderHome();
+}
+
+// ============================================================
+// STATS
+// ============================================================
+function getStats() {
+  let owned_cnt=0, missing_cnt=0, double_cnt=0, foil_cnt=0;
+  STICKERS.forEach(s => {
+    const c = owned[s.code]||0;
+    if (c>=1) { owned_cnt++; if(s.foil) foil_cnt++; }
+    else missing_cnt++;
+    if (c>=2) double_cnt += c-1;
+  });
+  return {owned_cnt, missing_cnt, double_cnt, foil_cnt};
+}
+
+function getTeamOrder() {
+  const seen = [];
+  STICKERS.forEach(s => { if (!seen.includes(s.team)) seen.push(s.team); });
+  return seen;
+}
+
+function teamLabel(t) { return t==='FWC' ? 'WM / FIFA Museum' : t; }
+
+// ============================================================
+// RENDER HOME
+// ============================================================
+function renderHome() {
+  const {owned_cnt, missing_cnt, double_cnt, foil_cnt} = getStats();
+  const pct = TOTAL>0 ? owned_cnt/TOTAL*100 : 0;
+  document.getElementById('heroCount').textContent = owned_cnt+' / '+TOTAL;
+  document.getElementById('heroPct').textContent = pct.toFixed(1)+'% gesammelt';
+  document.getElementById('mainProg').style.width = pct+'%';
+  document.getElementById('stOwned').textContent = owned_cnt;
+  document.getElementById('stMissing').textContent = missing_cnt;
+  document.getElementById('stDoubles').textContent = double_cnt;
+  document.getElementById('stFoil').textContent = foil_cnt;
+
+  const teams = getTeamOrder();
+  document.getElementById('teamProgList').innerHTML = teams.map(t => {
+    const stk = STICKERS.filter(s=>s.team===t);
+    const tot = stk.length;
+    const got = stk.filter(s=>(owned[s.code]||0)>=1).length;
+    const p = tot>0 ? got/tot*100 : 0;
+    const fc = got===0?'zero':got===tot?'full':'partial';
+    return `<div class="tpl-item">
+      <span class="tpl-name">${teamLabel(t)}</span>
+      <div class="tpl-bar"><div class="tpl-fill ${fc}" style="width:${p}%"></div></div>
+      <span class="tpl-pct">${p.toFixed(0)}%</span>
+      <span class="tpl-cnt">${got}/${tot}</span>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// RENDER COLLECTION
+// ============================================================
+function renderColl() {
+  const q = (document.getElementById('searchIn')?.value||'').toLowerCase();
+  const teams = getTeamOrder();
+  const container = document.getElementById('collContainer');
+  
+  let html = '';
+  teams.forEach(t => {
+    let stk = STICKERS.filter(s=>s.team===t);
+    if (q) stk = stk.filter(s=>s.code.toLowerCase().includes(q)||s.name.toLowerCase().includes(q));
+    if (curFilter==='owned') stk=stk.filter(s=>(owned[s.code]||0)>=1);
+    else if (curFilter==='missing') stk=stk.filter(s=>!(owned[s.code]||0));
+    else if (curFilter==='double') stk=stk.filter(s=>(owned[s.code]||0)>=2);
+    else if (curFilter==='foil') stk=stk.filter(s=>s.foil);
+    if (!stk.length) return;
+    
+    const tot = STICKERS.filter(s=>s.team===t).length;
+    const got = STICKERS.filter(s=>s.team===t&&(owned[s.code]||0)>=1).length;
+    const bc = got===0?'zero':got<tot?'partial':'';
+    const tid = 'ts_'+t.replace(/[^a-zA-Z0-9]/g,'_');
+    
+    html += `<div class="team-sec" id="${tid}">
+      <div class="team-hdr" onclick="toggleTeam('${tid}')">
+        <div class="team-hdr-l">
+          <span class="team-hdr-name">${teamLabel(t)}</span>
+          <span class="team-badge ${bc}">${got}/${tot}</span>
+        </div>
+        <i data-lucide="chevron-down" class="team-chevron" style="width:15px;height:15px;"></i>
+      </div>
+      <div class="team-stickers">${stk.map(s=>sCard(s)).join('')}</div>
+    </div>`;
+  });
+  
+  if (!html) {
+    container.innerHTML = '<div class="empty-state"><i data-lucide="search-x" style="width:36px;height:36px;display:block;margin:0 auto;"></i><h3>Keine Sticker gefunden</h3><p>Filter oder Suche anpassen</p></div>';
+  } else {
+    container.innerHTML = html;
+  }
+  lucide.createIcons();
+}
+
+function sCard(s) {
+  const c = owned[s.code]||0;
+  let cls = c>=2?'double':c>=1?'owned':'';
+  const catN = {badge:'Logo',team_photo:'Team',museum:'Museum',intro:'Intro'}[s.category]||'';
+  const catB = s.category!=='player'?`<span class="cat-badge ${s.category}">${catN}</span>`:'';
+  const dbl = c>=2?`<span class="s-dbl-badge">&#215;${c}</span>`:'';
+  const foil = s.foil?'<span class="s-foil">&#11088;</span>':'';
+  return `<div class="s-card ${cls}" onclick="openDetail('${s.code}')">
+    ${dbl}
+    <span class="s-code">${s.code}</span>
+    <span class="s-name">${s.name}</span>
+    ${foil}${catB}
+  </div>`;
+}
+
+function toggleTeam(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+  lucide.createIcons();
+}
+
+function setFilter(f, btn) {
+  curFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderColl();
+}
+
+// ============================================================
+// RENDER MISSING
+// ============================================================
+function renderMissing() {
+  const teams = getTeamOrder();
+  let html = '';
+  teams.forEach(t => {
+    const miss = STICKERS.filter(s=>s.team===t&&!(owned[s.code]||0));
+    if (!miss.length) return;
+    html += `<div class="lg">
+      <div class="lg-hdr"><span>${teamLabel(t)}</span><span>${miss.length} fehlend</span></div>
+      <div class="lg-items">${miss.map(s=>`<div class="li">
+        <span class="li-code">${s.code}</span>
+        <span class="li-name">${s.name}${s.foil?' <span class="foil-star">&#11088;</span>':''}</span>
+        <button class="btn btn-primary btn-sm" onclick="quickAdd('${s.code}')">+</button>
+      </div>`).join('')}</div>
+    </div>`;
+  });
+  if (!html) html = '<div class="empty-state"><i data-lucide="trophy" style="width:36px;height:36px;display:block;margin:0 auto;color:var(--gold);"></i><h3>Sammlung vollständig!</h3><p>Du hast alle Sticker.</p></div>';
+  document.getElementById('missingCont').innerHTML = html;
+  lucide.createIcons();
+}
+
+// ============================================================
+// RENDER DOUBLES
+// ============================================================
+function renderDoubles() {
+  const teams = getTeamOrder();
+  let html = '';
+  teams.forEach(t => {
+    const dbl = STICKERS.filter(s=>s.team===t&&(owned[s.code]||0)>=2);
+    if (!dbl.length) return;
+    html += `<div class="lg">
+      <div class="lg-hdr"><span>${teamLabel(t)}</span><span>${dbl.length} Doppelte</span></div>
+      <div class="lg-items">${dbl.map(s=>`<div class="li">
+        <span class="li-code">${s.code}</span>
+        <span class="li-name">${s.name}${s.foil?' <span class="foil-star">&#11088;</span>':''}</span>
+        <span class="li-cnt">&#215;${owned[s.code]}</span>
+      </div>`).join('')}</div>
+    </div>`;
+  });
+  if (!html) html = '<div class="empty-state"><i data-lucide="copy" style="width:36px;height:36px;display:block;margin:0 auto;"></i><h3>Keine Doppelten</h3><p>Noch keine Doppelsticker vorhanden.</p></div>';
+  document.getElementById('doublesCont').innerHTML = html;
+  lucide.createIcons();
+}
+
+// ============================================================
+// RENDER ALL (after state change)
+// ============================================================
+function renderAll() {
+  renderHome();
+  const ap = document.querySelector('.page.active');
+  if (!ap) return;
+  const id = ap.id.replace('page-','');
+  if (id==='collection') renderColl();
+  else if (id==='missing') renderMissing();
+  else if (id==='doubles') renderDoubles();
+}
+
+// ============================================================
+// DETAIL MODAL
+// ============================================================
+function openDetail(code) {
+  const s = SMAP[code];
+  if (!s) return;
+  curCode = code;
+  document.getElementById('dCode').textContent = code;
+  document.getElementById('dName').textContent = s.name;
+  const catNames = {badge:'Logo',team_photo:'Mannschaftsbild',museum:'FIFA Museum',intro:'Intro',player:'Spieler'};
+  const tl = s.team==='FWC'?'WM / FIFA':s.team;
+  document.getElementById('dMeta').innerHTML = `
+    <span class="d-badge" style="background:var(--navy-light);color:#fff;">${tl}</span>
+    <span class="d-badge cat-badge ${s.category}">${catNames[s.category]||s.category}</span>
+    ${s.foil?'<span class="d-badge" style="background:var(--gold-light);color:#92400e;">&#11088; Foil</span>':''}
+  `;
+  updDetailCnt();
+  document.getElementById('detailMod').classList.remove('hidden');
+  lucide.createIcons();
+}
+
+function updDetailCnt() {
+  const c = owned[curCode]||0;
+  document.getElementById('dCnt').textContent = c;
+  document.getElementById('dCntLbl').textContent = c===0?'Nicht vorhanden':c===1?'Einfach vorhanden':`${c-1}× doppelt vorhanden`;
+}
+
+function adjCnt(d) {
+  if (!curCode) return;
+  const n = Math.max(0, (owned[curCode]||0)+d);
+  if (n===0) delete owned[curCode]; else owned[curCode]=n;
+  updDetailCnt();
+  renderAll();
+}
+
+function deleteSticker() {
+  if (!curCode) return;
+  const prev = owned[curCode]||0;
+  const code = curCode;
+  delete owned[curCode];
+  updDetailCnt();
+  renderAll();
+  closeMod('detailMod');
+  undoToast(`Sticker ${code} entfernt`, () => { if(prev>0) owned[code]=prev; renderAll(); });
+}
+
+function quickAdd(code) {
+  owned[code] = (owned[code]||0)+1;
+  renderAll();
+  toast(`&#10003; ${code} hinzugefügt`, 'ok');
+}
+
+// ============================================================
+// ENTRY TABS
+// ============================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.e-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.e-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+
+function toggleDblMode() {
+  dblMode = !dblMode;
+  document.getElementById('dblBtn').classList.toggle('active', dblMode);
+}
+
+function previewInput() {
+  const raw = (document.getElementById('manInput').value||'').trim().toUpperCase();
+  const codes = raw.split(/[\s,;]+/).filter(Boolean);
+  const pv = document.getElementById('manPreview');
+  if (!codes.length) {
+    pv.className='preview-card';
+    pv.innerHTML='<div style="color:var(--text-muted);font-size:.82rem;">Code eingeben um Vorschau zu sehen</div>';
+    return;
+  }
+  if (codes.length===1) {
+    const s = SMAP[codes[0]];
+    if (s) {
+      const c = owned[s.code]||0;
+      pv.className='preview-card found';
+      pv.innerHTML=`<div class="pv-code">${s.code}</div>
+        <div class="pv-name">${s.name} &middot; ${s.team==='FWC'?'WM':s.team}</div>
+        <div style="font-size:.72rem;color:var(--text-muted);margin-top:.15rem;">${c?(c===1?'&#10003; Vorhanden':'&#215;'+c+' Vorhanden'):'Noch nicht gesammelt'}${s.foil?' &middot; &#11088; Foil':''}</div>`;
+    } else {
+      pv.className='preview-card not-found';
+      pv.innerHTML=`<div class="pv-code">${codes[0]}</div><div class="pv-name" style="color:var(--red);">Code nicht gefunden</div>`;
+    }
+  } else {
+    const found = codes.filter(c=>SMAP[c]).length;
+    pv.className='preview-card';
+    pv.innerHTML=`<div style="font-size:.88rem;font-weight:600;">${codes.length} Codes &middot; ${found} erkannt</div>
+      <div style="font-size:.75rem;color:var(--text-muted);">${codes.join(', ')}</div>`;
+  }
+}
+
+function addToQueue() {
+  const raw = (document.getElementById('manInput').value||'').trim().toUpperCase();
+  const codes = raw.split(/[\s,;]+/).filter(Boolean);
+  let added = 0;
+  codes.forEach(code => {
+    if (SMAP[code] && !queue.find(q=>q.code===code)) {
+      queue.push({code, dbl:dblMode});
+      added++;
+    }
+  });
+  if (added) {
+    document.getElementById('manInput').value='';
+    previewInput();
+    renderQueue();
+    toast(added+' Code'+(added>1?'s':'')+' in Warteschlange');
+  } else toast('Keine neuen gültigen Codes', 'err');
+}
+
+function renderQueue() {
+  const sec = document.getElementById('queueSec');
+  document.getElementById('qCount').textContent = queue.length;
+  if (!queue.length) { sec.style.display='none'; return; }
+  sec.style.display='';
+  document.getElementById('queueList').innerHTML = queue.map((q,i) => {
+    const s = SMAP[q.code];
+    return `<div class="q-item${q.dbl?' dbl':''}">
+      <span class="q-code">${q.code}</span>
+      <span class="q-name">${s?s.name:'–'}${q.dbl?' (&#215;2)':''}</span>
+      <button class="q-rm" onclick="rmQ(${i})"><i data-lucide="x" style="width:12px;height:12px;"></i></button>
+    </div>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+function rmQ(i) { queue.splice(i,1); renderQueue(); }
+function clearQ() { queue=[]; renderQueue(); }
+
+function confirmQueue() {
+  if (!queue.length) return;
+  queue.forEach(q => {
+    if (q.dbl) owned[q.code] = Math.max(owned[q.code]||0, 2);
+    else owned[q.code] = owned[q.code] ? owned[q.code]+1 : 1;
+  });
+  const n = queue.length;
+  queue=[];
+  renderQueue();
+  renderAll();
+  toast('&#10003; '+n+' Sticker eingetragen', 'ok');
+}
+
+// ============================================================
+// OCR
+// ============================================================
+async function handleOCR(file) {
+  if (!file) return;
+  document.getElementById('ocrPreview').style.display='block';
+  document.getElementById('ocrImg').src = URL.createObjectURL(file);
+  const stat = document.getElementById('ocrStat');
+  const prog = document.getElementById('ocrProg');
+  stat.textContent = 'OCR wird gestartet…';
+  prog.style.width='5%';
+  try {
+    const {data:{text}} = await Tesseract.recognize(file,'eng',{
+      logger: m => {
+        if (m.status==='recognizing text') {
+          prog.style.width=(5+m.progress*90)+'%';
+          stat.textContent='Texterkennung: '+Math.round(m.progress*100)+'%';
+        }
+      }
+    });
+    prog.style.width='100%';
+    stat.textContent='Abgeschlossen';
+    showOCRModal(extractCodes(text));
+  } catch(e) {
+    stat.textContent='Fehler: '+e.message;
+    toast('OCR-Fehler: '+e.message,'err');
+  }
+}
+
+function extractCodes(text) {
+  const found = new Set();
+  const upper = text.toUpperCase();
+  const re = /\b([A-Z]{2,4}\d{1,2})\b/g;
+  let m;
+  while ((m=re.exec(upper))!==null) if(SMAP[m[1]]) found.add(m[1]);
+  STICKERS.forEach(s => { if(upper.includes(s.code)) found.add(s.code); });
+  return [...found];
+}
+
+function showOCRModal(codes) {
+  ocrCodes = codes;
+  const desc = document.getElementById('ocrDesc');
+  const list = document.getElementById('ocrList');
+  desc.textContent = codes.length+' Sticker-Code'+(codes.length!==1?'s':'')+' erkannt. Bitte auswählen:';
+  if (!codes.length) {
+    list.innerHTML='<div style="text-align:center;padding:1.2rem;color:var(--text-muted);"><i data-lucide="alert-circle" style="width:26px;height:26px;display:block;margin:0 auto .4rem;"></i>Keine Codes erkannt. Bitte manuell eingeben.</div>';
+  } else {
+    list.innerHTML = codes.map((code,i) => {
+      const s = SMAP[code];
+      const ao = (owned[code]||0)>=1;
+      return `<div class="ocr-item checked" id="oi-${i}" onclick="togOCR(${i})">
+        <input type="checkbox" checked id="ocb-${i}" onchange="event.stopPropagation()">
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-family:monospace;font-size:.88rem;">${code}</div>
+          <div class="oi-name">${s.name} &middot; ${s.team==='FWC'?'WM':s.team}${ao?' &#10003;':''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('ocrMod').classList.remove('hidden');
+  lucide.createIcons();
+}
+
+function togOCR(i) {
+  const cb = document.getElementById('ocb-'+i);
+  cb.checked = !cb.checked;
+  document.getElementById('oi-'+i).classList.toggle('checked', cb.checked);
+}
+
+function confirmOCR() {
+  let n=0;
+  ocrCodes.forEach((code,i) => {
+    const cb = document.getElementById('ocb-'+i);
+    if (cb&&cb.checked) { owned[code]=(owned[code]||0)+1; n++; }
+  });
+  closeMod('ocrMod');
+  renderAll();
+  toast('&#10003; '+n+' Sticker eingetragen','ok');
+  document.getElementById('ocrPreview').style.display='none';
+  document.getElementById('ocrFile').value='';
+}
+
+// ============================================================
+// COPY LISTS
+// ============================================================
+function copyMissing() {
+  let t='Fehlende Sticker WM 2026\n\n';
+  getTeamOrder().forEach(team => {
+    const miss=STICKERS.filter(s=>s.team===team&&!(owned[s.code]||0));
+    if (miss.length) {
+      t+=teamLabel(team)+':\n';
+      t+=miss.map(s=>'  '+s.code+' – '+s.name).join('\n')+'\n\n';
+    }
+  });
+  navigator.clipboard.writeText(t.trim()).then(()=>toast('&#10003; Liste kopiert','ok'));
+}
+
+function copyDoubles() {
+  let t='Doppelte Sticker WM 2026\n\n';
+  getTeamOrder().forEach(team => {
+    const dbl=STICKERS.filter(s=>s.team===team&&(owned[s.code]||0)>=2);
+    if (dbl.length) {
+      t+=teamLabel(team)+':\n';
+      t+=dbl.map(s=>'  '+s.code+' – '+s.name+' (&#215;'+owned[s.code]+')').join('\n')+'\n\n';
+    }
+  });
+  navigator.clipboard.writeText(t.trim()).then(()=>toast('&#10003; Liste kopiert','ok'));
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function openSettings() {
+  document.getElementById('sRawUrl').value = GITHUB_RAW_URL;
+  document.getElementById('sRepo').value = GITHUB_REPO;
+  document.getElementById('sBranch').value = GITHUB_BRANCH;
+  document.getElementById('sToken').value='';
+  updTokStat();
+  document.getElementById('settingsMod').classList.remove('hidden');
+  lucide.createIcons();
+}
+function saveSettings() {
+  const ru=document.getElementById('sRawUrl').value.trim();
+  const rp=document.getElementById('sRepo').value.trim();
+  const br=document.getElementById('sBranch').value.trim();
+  const tk=document.getElementById('sToken').value.trim();
+  if(ru) GITHUB_RAW_URL=ru;
+  if(rp) GITHUB_REPO=rp;
+  if(br) GITHUB_BRANCH=br;
+  if(tk) GITHUB_TOKEN=tk;
+  updTokStat();
+  closeMod('settingsMod');
+  toast('&#10003; Einstellungen gespeichert','ok');
+}
+function updTokStat() {
+  const el=document.getElementById('tokStat');
+  if(GITHUB_TOKEN){el.className='tok-status ok';el.innerHTML='<i data-lucide="unlock" style="width:12px;height:12px;"></i>&nbsp;Token gesetzt (RAM-only)';}
+  else{el.className='tok-status none';el.innerHTML='<i data-lucide="lock" style="width:12px;height:12px;"></i>&nbsp;Kein Token – Download-Button wird angeboten';}
+  lucide.createIcons();
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function closeMod(id) { document.getElementById(id).classList.add('hidden'); }
+document.addEventListener('click', e => { if(e.target.classList.contains('modal-overlay')) e.target.classList.add('hidden'); });
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg, type, dur=3000) {
+  const c=document.getElementById('toast-c');
+  const t=document.createElement('div');
+  t.className='toast';
+  t.innerHTML=msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),280);},dur);
+}
+function undoToast(msg, fn, dur=5000) {
+  const c=document.getElementById('toast-c');
+  const t=document.createElement('div');
+  t.className='toast';
+  t.innerHTML=`<span>${msg}</span><button class="toast-undo-btn">R&#252;ckg&#228;ngig</button>`;
+  let timer=setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),280);},dur);
+  t.querySelector('.toast-undo-btn').onclick=()=>{clearTimeout(timer);fn();t.classList.add('out');setTimeout(()=>t.remove(),280);toast('&#8617; Wiederhergestellt','ok');};
+  c.appendChild(t);
+}
+
+// ============================================================
+// THEME
+// ============================================================
+function toggleTheme() {
+  const html=document.documentElement;
+  const dark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',dark?'light':'dark');
+  document.getElementById('themeIcon').setAttribute('data-lucide',dark?'moon':'sun');
+  lucide.createIcons();
+}
+
+// ============================================================
+// DRAG & DROP
+// ============================================================
+const uz=document.getElementById('uploadZone');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag-over');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag-over'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))handleOCR(f);});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  renderHome();
+  if (!GITHUB_RAW_URL.includes('USERNAME')) loadFromGitHub();
+});
+</script>
+</body>
+</html>
