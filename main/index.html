@@ -1561,35 +1561,67 @@
           <!-- TAUSCH-EINGABE -->
           <div class="trade-box">
             <div class="trade-title">
-              <i data-lucide="arrow-left-right" style="width:14px;height:14px;"></i>
+              <i
+                data-lucide="arrow-left-right"
+                style="width: 14px; height: 14px"
+              ></i>
               Getauscht – Sticker abziehen
             </div>
-            <div class="trade-desc">Codes der getauschten Sticker eingeben. Jeder wird einmal von den Doppelten abgezogen.</div>
-            <div class="manual-row" style="margin-top:.6rem;">
+            <div class="trade-desc">
+              Codes der getauschten Sticker eingeben. Jeder wird einmal von den
+              Doppelten abgezogen.
+            </div>
+            <div class="manual-row" style="margin-top: 0.6rem">
               <input
                 type="text"
                 id="tradeInput"
                 placeholder="z.B. MEX3 oder MEX3, ARG17"
                 oninput="previewTrade()"
-                onkeydown="if(event.key==='Enter') addToTradeQueue();"
+                onkeydown="if (event.key === 'Enter') addToTradeQueue();"
               />
-              <button class="btn btn-primary" onclick="addToTradeQueue()" style="padding:.5rem .8rem;">
-                <i data-lucide="plus" style="width:14px;height:14px;"></i>
+              <button
+                class="btn btn-primary"
+                onclick="addToTradeQueue()"
+                style="padding: 0.5rem 0.8rem"
+              >
+                <i data-lucide="plus" style="width: 14px; height: 14px"></i>
               </button>
             </div>
             <div class="preview-card" id="tradePreview">
-              <div style="color:var(--text-muted);font-size:.82rem;">Code eingeben um Vorschau zu sehen</div>
+              <div style="color: var(--text-muted); font-size: 0.82rem">
+                Code eingeben um Vorschau zu sehen
+              </div>
             </div>
-            <div class="queue-sec" id="tradeQueueSec" style="display:none;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.45rem;">
-                <span style="font-size:.82rem;font-weight:600;">Tausch-Liste</span>
-                <button class="btn btn-secondary btn-sm" onclick="clearTradeQueue()">
-                  <i data-lucide="trash-2" style="width:12px;height:12px;"></i> Leeren
+            <div class="queue-sec" id="tradeQueueSec" style="display: none">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 0.45rem;
+                "
+              >
+                <span style="font-size: 0.82rem; font-weight: 600"
+                  >Tausch-Liste</span
+                >
+                <button
+                  class="btn btn-secondary btn-sm"
+                  onclick="clearTradeQueue()"
+                >
+                  <i
+                    data-lucide="trash-2"
+                    style="width: 12px; height: 12px"
+                  ></i>
+                  Leeren
                 </button>
               </div>
               <div id="tradeQueue"></div>
-              <button class="btn btn-primary" style="width:100%;margin-top:.6rem;" onclick="confirmTrade()">
-                <i data-lucide="check" style="width:14px;height:14px;"></i>
+              <button
+                class="btn btn-primary"
+                style="width: 100%; margin-top: 0.6rem"
+                onclick="confirmTrade()"
+              >
+                <i data-lucide="check" style="width: 14px; height: 14px"></i>
                 Bestätigen – Sticker abziehen
               </button>
             </div>
@@ -1661,8 +1693,6 @@
         </div>
       </div>
     </div>
-
-
 
     <!-- kein Settings-Modal mehr – Firebase-Konfiguration direkt im Script -->
 
@@ -8987,7 +9017,8 @@
         const pv = document.getElementById("manPreview");
         if (!parts.length) {
           pv.className = "preview-card";
-          pv.innerHTML = '<div style="color:var(--text-muted);font-size:.82rem;">Code oder Spielername eingeben</div>';
+          pv.innerHTML =
+            '<div style="color:var(--text-muted);font-size:.82rem;">Code oder Spielername eingeben</div>';
           return;
         }
         if (parts.length === 1) {
@@ -9093,7 +9124,7 @@
           (s) =>
             s.name.toLowerCase().includes(q) ||
             s.code.toLowerCase().includes(q) ||
-            s.team.toLowerCase().includes(q)
+            s.team.toLowerCase().includes(q),
         );
         return match ? match.code : null;
       }
@@ -9103,7 +9134,8 @@
         const pv = document.getElementById("tradePreview");
         if (!raw) {
           pv.className = "preview-card";
-          pv.innerHTML = '<div style="color:var(--text-muted);font-size:.82rem;">Code oder Spielername eingeben</div>';
+          pv.innerHTML =
+            '<div style="color:var(--text-muted);font-size:.82rem;">Code oder Spielername eingeben</div>';
           return;
         }
         const codes = raw.split(/[\s,;]+/).filter(Boolean);
@@ -9116,7 +9148,7 @@
             pv.className = "preview-card " + (isDbl ? "found" : "not-found");
             pv.innerHTML = `<div class="pv-code">${s.code}</div>
               <div class="pv-name">${s.name} &middot; ${s.team === "FWC" ? "WM" : s.team}</div>
-              <div style="font-size:.72rem;color:var(--text-muted);margin-top:.15rem;">${isDbl ? "&#215;" + c + " vorhanden – kann abgezogen werden" : (c === 1 ? "Nur einmal vorhanden – kein Doppelter" : "Nicht vorhanden")}</div>`;
+              <div style="font-size:.72rem;color:var(--text-muted);margin-top:.15rem;">${isDbl ? "&#215;" + c + " vorhanden – kann abgezogen werden" : c === 1 ? "Nur einmal vorhanden – kein Doppelter" : "Nicht vorhanden"}</div>`;
           } else {
             pv.className = "preview-card not-found";
             pv.innerHTML = `<div class="pv-code">${codes[0]}</div><div class="pv-name" style="color:var(--red);">Nicht gefunden</div>`;
@@ -9144,19 +9176,27 @@
           document.getElementById("tradeInput").value = "";
           previewTrade();
           renderTradeQueue();
-          toast(added + " Code" + (added > 1 ? "s" : "") + " zur Tausch-Liste hinzugefügt");
+          toast(
+            added +
+              " Code" +
+              (added > 1 ? "s" : "") +
+              " zur Tausch-Liste hinzugefügt",
+          );
         } else toast("Keine neuen gültigen Codes", "err");
       }
 
       function renderTradeQueue() {
         const sec = document.getElementById("tradeQueueSec");
-        if (!tradeQueue.length) { sec.style.display = "none"; return; }
+        if (!tradeQueue.length) {
+          sec.style.display = "none";
+          return;
+        }
         sec.style.display = "";
         document.getElementById("tradeQueue").innerHTML = tradeQueue
           .map((code, i) => {
             const s = SMAP[code];
             const c = owned[code] || 0;
-            const warn = c < 2 ? ' style="color:var(--red);"' : '';
+            const warn = c < 2 ? ' style="color:var(--red);"' : "";
             return `<div class="q-item">
               <span class="q-code">${code}</span>
               <span class="q-name"${warn}>${s ? s.name : "–"}${c < 2 ? " (kein Doppelter!" + (c === 0 ? " – nicht vorhanden" : "") + ")" : ""}</span>
@@ -9167,12 +9207,19 @@
         lucide.createIcons();
       }
 
-      function rmTradeQ(i) { tradeQueue.splice(i, 1); renderTradeQueue(); }
-      function clearTradeQueue() { tradeQueue = []; renderTradeQueue(); }
+      function rmTradeQ(i) {
+        tradeQueue.splice(i, 1);
+        renderTradeQueue();
+      }
+      function clearTradeQueue() {
+        tradeQueue = [];
+        renderTradeQueue();
+      }
 
       function confirmTrade() {
         if (!tradeQueue.length) return;
-        let done = 0, skipped = 0;
+        let done = 0,
+          skipped = 0;
         tradeQueue.forEach((code) => {
           const c = owned[code] || 0;
           if (c >= 2) {
@@ -9400,7 +9447,6 @@
       }
 
       // ============================================================
-
 
       // ============================================================
       // GLOBALE FUNKTIONEN (für onclick-Handler im HTML)
