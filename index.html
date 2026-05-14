@@ -1105,6 +1105,28 @@
         color: #f87171;
         border-color: #7f1d1d;
       }
+      /* TRADE BOX */
+      .trade-box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        margin-bottom: 1.1rem;
+      }
+      .trade-title {
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 0.25rem;
+        color: var(--text);
+      }
+      .trade-desc {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        line-height: 1.45;
+      }
       /* OCR MODAL */
       .ocr-list {
         display: flex;
@@ -1389,51 +1411,8 @@
 
         <!-- ENTER -->
         <div class="page" id="page-enter">
-          <div class="entry-tabs">
-            <button class="e-tab active" onclick="switchTab('photo', this)">
-              <i data-lucide="camera" style="width: 14px; height: 14px"></i
-              >Foto-Upload
-            </button>
-            <button class="e-tab" onclick="switchTab('manual', this)">
-              <i data-lucide="keyboard" style="width: 14px; height: 14px"></i
-              >Manuell
-            </button>
-          </div>
-          <!-- PHOTO -->
-          <div class="e-panel active" id="panel-photo">
-            <div class="upload-zone" id="uploadZone">
-              <input
-                type="file"
-                accept="image/*"
-                id="ocrFile"
-                onchange="handleOCR(this.files[0])"
-              />
-              <div class="uz-icon">
-                <i
-                  data-lucide="image-plus"
-                  style="width: 34px; height: 34px"
-                ></i>
-              </div>
-              <h3>Sticker-Tüte fotografieren</h3>
-              <p>
-                Bild hochladen oder hier ablegen<br /><small
-                  style="opacity: 0.65"
-                  >Codes auf der Rückseite werden automatisch erkannt</small
-                >
-              </p>
-            </div>
-            <div id="ocrPreview" style="display: none">
-              <div class="ocr-preview">
-                <img id="ocrImg" src="" alt="" />
-                <div class="ocr-status" id="ocrStat">OCR startet…</div>
-                <div class="ocr-pbar">
-                  <div class="ocr-pbar-fill" id="ocrProg"></div>
-                </div>
-              </div>
-            </div>
-          </div>
           <!-- MANUAL -->
-          <div class="e-panel" id="panel-manual">
+          <div class="e-panel active" id="panel-manual">
             <div class="manual-row">
               <input
                 type="text"
@@ -1578,6 +1557,44 @@
               Liste kopieren
             </button>
           </div>
+
+          <!-- TAUSCH-EINGABE -->
+          <div class="trade-box">
+            <div class="trade-title">
+              <i data-lucide="arrow-left-right" style="width:14px;height:14px;"></i>
+              Getauscht – Sticker abziehen
+            </div>
+            <div class="trade-desc">Codes der getauschten Sticker eingeben. Jeder wird einmal von den Doppelten abgezogen.</div>
+            <div class="manual-row" style="margin-top:.6rem;">
+              <input
+                type="text"
+                id="tradeInput"
+                placeholder="z.B. MEX3 oder MEX3, ARG17"
+                oninput="previewTrade()"
+                onkeydown="if(event.key==='Enter') addToTradeQueue();"
+              />
+              <button class="btn btn-primary" onclick="addToTradeQueue()" style="padding:.5rem .8rem;">
+                <i data-lucide="plus" style="width:14px;height:14px;"></i>
+              </button>
+            </div>
+            <div class="preview-card" id="tradePreview">
+              <div style="color:var(--text-muted);font-size:.82rem;">Code eingeben um Vorschau zu sehen</div>
+            </div>
+            <div class="queue-sec" id="tradeQueueSec" style="display:none;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.45rem;">
+                <span style="font-size:.82rem;font-weight:600;">Tausch-Liste</span>
+                <button class="btn btn-secondary btn-sm" onclick="clearTradeQueue()">
+                  <i data-lucide="trash-2" style="width:12px;height:12px;"></i> Leeren
+                </button>
+              </div>
+              <div id="tradeQueue"></div>
+              <button class="btn btn-primary" style="width:100%;margin-top:.6rem;" onclick="confirmTrade()">
+                <i data-lucide="check" style="width:14px;height:14px;"></i>
+                Bestätigen – Sticker abziehen
+              </button>
+            </div>
+          </div>
+
           <div id="doublesCont"></div>
         </div>
       </main>
@@ -1645,35 +1662,7 @@
       </div>
     </div>
 
-    <!-- OCR MODAL -->
-    <div class="modal-overlay hidden" id="ocrMod">
-      <div class="modal">
-        <div class="modal-title">
-          <span>Erkannte Sticker bestätigen</span
-          ><button class="modal-close" onclick="closeMod('ocrMod')">
-            <i data-lucide="x" style="width: 17px; height: 17px"></i>
-          </button>
-        </div>
-        <div
-          style="
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 0.65rem;
-          "
-          id="ocrDesc"
-        ></div>
-        <div class="ocr-list" id="ocrList"></div>
-        <div class="modal-actions">
-          <button class="btn btn-primary" onclick="confirmOCR()">
-            <i data-lucide="check" style="width: 14px; height: 14px"></i>
-            Ausgewählte eintragen
-          </button>
-          <button class="btn btn-secondary" onclick="closeMod('ocrMod')">
-            Abbrechen
-          </button>
-        </div>
-      </div>
-    </div>
+
 
     <!-- kein Settings-Modal mehr – Firebase-Konfiguration direkt im Script -->
 
@@ -8743,7 +8732,9 @@
             stk = stk.filter(
               (s) =>
                 s.code.toLowerCase().includes(q) ||
-                s.name.toLowerCase().includes(q),
+                s.name.toLowerCase().includes(q) ||
+                s.team.toLowerCase().includes(q) ||
+                teamLabel(s.team).toLowerCase().includes(q),
             );
           if (curFilter === "owned")
             stk = stk.filter((s) => (owned[s.code] || 0) >= 1);
@@ -8761,7 +8752,8 @@
           const bc = got === 0 ? "zero" : got < tot ? "partial" : "";
           const tid = "ts_" + t.replace(/[^a-zA-Z0-9]/g, "_");
 
-          html += `<div class="team-sec" id="${tid}">
+          const autoOpen = q ? " open" : "";
+          html += `<div class="team-sec${autoOpen}" id="${tid}">
       <div class="team-hdr" onclick="toggleTeam('${tid}')">
         <div class="team-hdr-l">
           <span class="team-hdr-name">${teamLabel(t)}</span>
@@ -8990,19 +8982,17 @@
       }
 
       function previewInput() {
-        const raw = (document.getElementById("manInput").value || "")
-          .trim()
-          .toUpperCase();
-        const codes = raw.split(/[\s,;]+/).filter(Boolean);
+        const raw = (document.getElementById("manInput").value || "").trim();
+        const parts = raw.split(/[\s,;]+/).filter(Boolean);
         const pv = document.getElementById("manPreview");
-        if (!codes.length) {
+        if (!parts.length) {
           pv.className = "preview-card";
-          pv.innerHTML =
-            '<div style="color:var(--text-muted);font-size:.82rem;">Code eingeben um Vorschau zu sehen</div>';
+          pv.innerHTML = '<div style="color:var(--text-muted);font-size:.82rem;">Code oder Spielername eingeben</div>';
           return;
         }
-        if (codes.length === 1) {
-          const s = SMAP[codes[0]];
+        if (parts.length === 1) {
+          const code = resolveInput(parts[0]);
+          const s = code ? SMAP[code] : null;
           if (s) {
             const c = owned[s.code] || 0;
             pv.className = "preview-card found";
@@ -9011,24 +9001,23 @@
         <div style="font-size:.72rem;color:var(--text-muted);margin-top:.15rem;">${c ? (c === 1 ? "&#10003; Vorhanden" : "&#215;" + c + " Vorhanden") : "Noch nicht gesammelt"}${s.foil ? " &middot; &#11088; Foil" : ""}</div>`;
           } else {
             pv.className = "preview-card not-found";
-            pv.innerHTML = `<div class="pv-code">${codes[0]}</div><div class="pv-name" style="color:var(--red);">Code nicht gefunden</div>`;
+            pv.innerHTML = `<div class="pv-code">${parts[0]}</div><div class="pv-name" style="color:var(--red);">Nicht gefunden</div>`;
           }
         } else {
-          const found = codes.filter((c) => SMAP[c]).length;
+          const found = parts.filter((p) => resolveInput(p)).length;
           pv.className = "preview-card";
-          pv.innerHTML = `<div style="font-size:.88rem;font-weight:600;">${codes.length} Codes &middot; ${found} erkannt</div>
-      <div style="font-size:.75rem;color:var(--text-muted);">${codes.join(", ")}</div>`;
+          pv.innerHTML = `<div style="font-size:.88rem;font-weight:600;">${parts.length} Eingaben &middot; ${found} erkannt</div>
+      <div style="font-size:.75rem;color:var(--text-muted);">${parts.join(", ")}</div>`;
         }
       }
 
       function addToQueue() {
-        const raw = (document.getElementById("manInput").value || "")
-          .trim()
-          .toUpperCase();
-        const codes = raw.split(/[\s,;]+/).filter(Boolean);
+        const raw = (document.getElementById("manInput").value || "").trim();
+        const parts = raw.split(/[\s,;]+/).filter(Boolean);
         let added = 0;
-        codes.forEach((code) => {
-          if (SMAP[code] && !queue.find((q) => q.code === code)) {
+        parts.forEach((p) => {
+          const code = resolveInput(p);
+          if (code && !queue.find((q) => q.code === code)) {
             queue.push({ code, dbl: dblMode });
             added++;
           }
@@ -9090,7 +9079,119 @@
       }
 
       // ============================================================
-      // OCR
+      // TAUSCH (Doppelte abziehen)
+      // ============================================================
+      let tradeQueue = [];
+
+      function resolveInput(raw) {
+        // Gibt einen Sticker-Code zurück, egal ob Code oder Spielername eingegeben
+        const up = raw.trim().toUpperCase();
+        if (SMAP[up]) return up;
+        // Suche nach Spielername (case-insensitive, partial)
+        const q = raw.trim().toLowerCase();
+        const match = STICKERS.find(
+          (s) =>
+            s.name.toLowerCase().includes(q) ||
+            s.code.toLowerCase().includes(q) ||
+            s.team.toLowerCase().includes(q)
+        );
+        return match ? match.code : null;
+      }
+
+      function previewTrade() {
+        const raw = (document.getElementById("tradeInput").value || "").trim();
+        const pv = document.getElementById("tradePreview");
+        if (!raw) {
+          pv.className = "preview-card";
+          pv.innerHTML = '<div style="color:var(--text-muted);font-size:.82rem;">Code oder Spielername eingeben</div>';
+          return;
+        }
+        const codes = raw.split(/[\s,;]+/).filter(Boolean);
+        if (codes.length === 1) {
+          const code = resolveInput(codes[0]);
+          if (code) {
+            const s = SMAP[code];
+            const c = owned[code] || 0;
+            const isDbl = c >= 2;
+            pv.className = "preview-card " + (isDbl ? "found" : "not-found");
+            pv.innerHTML = `<div class="pv-code">${s.code}</div>
+              <div class="pv-name">${s.name} &middot; ${s.team === "FWC" ? "WM" : s.team}</div>
+              <div style="font-size:.72rem;color:var(--text-muted);margin-top:.15rem;">${isDbl ? "&#215;" + c + " vorhanden – kann abgezogen werden" : (c === 1 ? "Nur einmal vorhanden – kein Doppelter" : "Nicht vorhanden")}</div>`;
+          } else {
+            pv.className = "preview-card not-found";
+            pv.innerHTML = `<div class="pv-code">${codes[0]}</div><div class="pv-name" style="color:var(--red);">Nicht gefunden</div>`;
+          }
+        } else {
+          const found = codes.filter((c) => resolveInput(c)).length;
+          pv.className = "preview-card";
+          pv.innerHTML = `<div style="font-size:.88rem;font-weight:600;">${codes.length} Eingaben &middot; ${found} erkannt</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">${codes.join(", ")}</div>`;
+        }
+      }
+
+      function addToTradeQueue() {
+        const raw = (document.getElementById("tradeInput").value || "").trim();
+        const parts = raw.split(/[\s,;]+/).filter(Boolean);
+        let added = 0;
+        parts.forEach((p) => {
+          const code = resolveInput(p);
+          if (code && !tradeQueue.includes(code)) {
+            tradeQueue.push(code);
+            added++;
+          }
+        });
+        if (added) {
+          document.getElementById("tradeInput").value = "";
+          previewTrade();
+          renderTradeQueue();
+          toast(added + " Code" + (added > 1 ? "s" : "") + " zur Tausch-Liste hinzugefügt");
+        } else toast("Keine neuen gültigen Codes", "err");
+      }
+
+      function renderTradeQueue() {
+        const sec = document.getElementById("tradeQueueSec");
+        if (!tradeQueue.length) { sec.style.display = "none"; return; }
+        sec.style.display = "";
+        document.getElementById("tradeQueue").innerHTML = tradeQueue
+          .map((code, i) => {
+            const s = SMAP[code];
+            const c = owned[code] || 0;
+            const warn = c < 2 ? ' style="color:var(--red);"' : '';
+            return `<div class="q-item">
+              <span class="q-code">${code}</span>
+              <span class="q-name"${warn}>${s ? s.name : "–"}${c < 2 ? " (kein Doppelter!" + (c === 0 ? " – nicht vorhanden" : "") + ")" : ""}</span>
+              <button class="q-rm" onclick="rmTradeQ(${i})"><i data-lucide="x" style="width:12px;height:12px;"></i></button>
+            </div>`;
+          })
+          .join("");
+        lucide.createIcons();
+      }
+
+      function rmTradeQ(i) { tradeQueue.splice(i, 1); renderTradeQueue(); }
+      function clearTradeQueue() { tradeQueue = []; renderTradeQueue(); }
+
+      function confirmTrade() {
+        if (!tradeQueue.length) return;
+        let done = 0, skipped = 0;
+        tradeQueue.forEach((code) => {
+          const c = owned[code] || 0;
+          if (c >= 2) {
+            const newCount = c - 1;
+            owned[code] = newCount;
+            fbWriteSticker(code, newCount);
+            done++;
+          } else skipped++;
+        });
+        tradeQueue = [];
+        renderTradeQueue();
+        renderAll();
+        let msg = "&#10003; " + done + " Sticker abgezogen";
+        if (skipped) msg += " (" + skipped + " übersprungen – kein Doppelter)";
+        toast(msg, done > 0 ? "ok" : "err");
+      }
+
+      // ============================================================
+      // OCR (entfernt – Platzhalter für globale Exports)
       // ============================================================
       async function handleOCR(file) {
         if (!file) return;
@@ -9299,20 +9400,7 @@
       }
 
       // ============================================================
-      // DRAG & DROP
-      // ============================================================
-      const uz = document.getElementById("uploadZone");
-      uz.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        uz.classList.add("drag-over");
-      });
-      uz.addEventListener("dragleave", () => uz.classList.remove("drag-over"));
-      uz.addEventListener("drop", (e) => {
-        e.preventDefault();
-        uz.classList.remove("drag-over");
-        const f = e.dataTransfer.files[0];
-        if (f && f.type.startsWith("image/")) handleOCR(f);
-      });
+
 
       // ============================================================
       // GLOBALE FUNKTIONEN (für onclick-Handler im HTML)
@@ -9325,9 +9413,6 @@
       window.clearQ = clearQ;
       window.rmQ = rmQ;
       window.confirmQueue = confirmQueue;
-      window.handleOCR = handleOCR;
-      window.togOCR = togOCR;
-      window.confirmOCR = confirmOCR;
       window.openDetail = openDetail;
       window.adjCnt = adjCnt;
       window.deleteSticker = deleteSticker;
@@ -9338,6 +9423,11 @@
       window.toggleTheme = toggleTheme;
       window.copyMissing = copyMissing;
       window.copyDoubles = copyDoubles;
+      window.previewTrade = previewTrade;
+      window.addToTradeQueue = addToTradeQueue;
+      window.rmTradeQ = rmTradeQ;
+      window.clearTradeQueue = clearTradeQueue;
+      window.confirmTrade = confirmTrade;
 
       // ============================================================
       // INIT
