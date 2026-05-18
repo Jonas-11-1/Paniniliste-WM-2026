@@ -180,59 +180,12 @@
       }
       @media (min-width: 768px) {
         main {
-          padding: 1.5rem 2rem 2rem;
+          padding: 1.5rem 2rem 5rem;
         }
       }
-      /* SIDE NAV */
+      /* SIDE NAV – entfernt, nur untere Navigationsleiste wird verwendet */
       .side-nav {
-        display: none;
-      }
-      @media (min-width: 768px) {
-        nav.bottom-nav {
-          display: none;
-        }
-        .side-nav {
-          display: flex;
-          flex-direction: column;
-          position: sticky;
-          top: var(--header-h);
-          height: calc(100vh - var(--header-h));
-          width: 192px;
-          flex-shrink: 0;
-          background: var(--surface);
-          border-right: 1px solid var(--border);
-          padding: 0.75rem 0.5rem;
-          gap: 0.15rem;
-          overflow-y: auto;
-        }
-        .side-nav button {
-          border: none;
-          background: none;
-          cursor: pointer;
-          color: var(--text-muted);
-          padding: 0.58rem 0.9rem;
-          border-radius: var(--radius);
-          display: flex;
-          align-items: center;
-          gap: 0.6rem;
-          font-size: 0.875rem;
-          font-weight: 500;
-          transition: all var(--transition);
-          width: 100%;
-          text-align: left;
-          white-space: nowrap;
-        }
-        .side-nav button:hover {
-          background: var(--surface-2);
-          color: var(--text);
-        }
-        .side-nav button.active {
-          background: var(--red-light);
-          color: var(--red);
-        }
-        [data-theme="dark"] .side-nav button.active {
-          background: rgba(200, 16, 46, 0.18);
-        }
+        display: none !important;
       }
       /* BOTTOM NAV */
       nav.bottom-nav {
@@ -1422,15 +1375,6 @@
                 onkeydown="if (event.key === 'Enter') addToQueue();"
               />
               <button
-                class="btn-dbl"
-                id="dblBtn"
-                onclick="toggleDblMode()"
-                title="Als Doppel eintragen"
-              >
-                <i data-lucide="copy" style="width: 13px; height: 13px"></i
-                >&#215;2
-              </button>
-              <button
                 class="btn btn-primary"
                 onclick="addToQueue()"
                 style="padding: 0.5rem 0.8rem"
@@ -1487,6 +1431,7 @@
                 id="searchIn"
                 placeholder="Code oder Name…"
                 oninput="renderColl()"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
               />
             </div>
             <button class="filter-btn active" onclick="setFilter('all', this)">
@@ -8670,10 +8615,10 @@
           .forEach((p) => p.classList.remove("active"));
         document.getElementById("page-" + name).classList.add("active");
         document
-          .querySelectorAll("#sideNav button, #botNav button")
+          .querySelectorAll("#botNav button")
           .forEach((b) => b.classList.remove("active"));
         document
-          .querySelectorAll("#sideNav button, #botNav button")
+          .querySelectorAll("#botNav button")
           .forEach((b) => {
             if (
               b.getAttribute("onclick") &&
@@ -9015,7 +8960,6 @@
 
       function toggleDblMode() {
         dblMode = !dblMode;
-        document.getElementById("dblBtn").classList.toggle("active", dblMode);
       }
 
       function previewInput() {
@@ -9053,19 +8997,31 @@
         const raw = (document.getElementById("manInput").value || "").trim();
         const parts = raw.split(/[\s,;]+/).filter(Boolean);
         let added = 0;
+        let unknownWithDigit = [];
         parts.forEach((p) => {
           const code = resolveInput(p);
           if (code && !queue.find((q) => q.code === code)) {
             queue.push({ code, dbl: dblMode });
             added++;
+          } else if (!code && /\d/.test(p)) {
+            // Eingabe enthält eine Zahl, wurde aber nicht erkannt → Warnung
+            unknownWithDigit.push(p);
           }
         });
+        if (unknownWithDigit.length > 0) {
+          const listed = unknownWithDigit.join(", ");
+          if (!confirm("Achtung: Der eingegebene Code \"" + listed + "\" wurde nicht erkannt.\nBitte prüfe den Code und versuche es erneut.\n\nTrotzdem fortfahren?")) {
+            return;
+          }
+        }
         if (added) {
           document.getElementById("manInput").value = "";
           previewInput();
           renderQueue();
           toast(added + " Code" + (added > 1 ? "s" : "") + " in Warteschlange");
-        } else toast("Keine neuen gültigen Codes", "err");
+        } else if (!unknownWithDigit.length) {
+          toast("Keine neuen gültigen Codes", "err");
+        }
       }
 
       function renderQueue() {
@@ -9172,13 +9128,22 @@
         const raw = (document.getElementById("tradeInput").value || "").trim();
         const parts = raw.split(/[\s,;]+/).filter(Boolean);
         let added = 0;
+        let unknownWithDigit = [];
         parts.forEach((p) => {
           const code = resolveInput(p);
           if (code && !tradeQueue.includes(code)) {
             tradeQueue.push(code);
             added++;
+          } else if (!code && /\d/.test(p)) {
+            unknownWithDigit.push(p);
           }
         });
+        if (unknownWithDigit.length > 0) {
+          const listed = unknownWithDigit.join(", ");
+          if (!confirm("Achtung: Der eingegebene Code \"" + listed + "\" wurde nicht erkannt.\nBitte prüfe den Code und versuche es erneut.\n\nTrotzdem fortfahren?")) {
+            return;
+          }
+        }
         if (added) {
           document.getElementById("tradeInput").value = "";
           previewTrade();
@@ -9189,7 +9154,9 @@
               (added > 1 ? "s" : "") +
               " zur Tausch-Liste hinzugefügt",
           );
-        } else toast("Keine neuen gültigen Codes", "err");
+        } else if (!unknownWithDigit.length) {
+          toast("Keine neuen gültigen Codes", "err");
+        }
       }
 
       function renderTradeQueue() {
@@ -9382,7 +9349,7 @@
                     s.code +
                     " – " +
                     s.name +
-                    " (&#215;" +
+                    " (\u00d7" +
                     owned[s.code] +
                     ")",
                 )
